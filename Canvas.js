@@ -14,7 +14,7 @@ export default function Canvas() {
     useEffect(() => {
         setContext(target.current.getContext('2d'))
         resizeObs = new ResizeObserver(callback)
-        resizeObs.observe(target.current)
+        resizeObs.observe(target.current.parentNode)
     }, [])
 
     useEffect(() => {
@@ -23,20 +23,22 @@ export default function Canvas() {
 
             // cube.draw(context)
             const targetAngle = .03
-
             let current = 1
             const step = () => {
-                cube.rotate('x', targetAngle, context)
-                cube.rotate('y', targetAngle / 2, context)
-                cube.rotate('z', targetAngle / 4, context)
 
+                cube.rotate('x', targetAngle, current, context)
+                cube.rotate('y', targetAngle / 2, current, context)
+                cube.rotate('z', targetAngle / 4, current, context)
+                // current = current === 1 ? .5 : 1
                 requestAnimationFrame(step);
+
             }
 
             requestAnimationFrame(step)
 
         }
     }, [width, height, context])
+
     return (
         <div style={{
             width: '100%',

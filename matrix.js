@@ -47,4 +47,7 @@ export function rotationMatrix(axis, angle) {
     return rotationM
 }
 
-export const PROJECTION_MATRIX = [[1, 0, 0],[0, 1, 0]]
+export function projectionMatrix (scale){
+    return [[scale, 0, 0],[0, scale, 0]]
+}
+// export const PROJECTION_MATRIX = [[1, 0, 0],[0, 1, 0]]
