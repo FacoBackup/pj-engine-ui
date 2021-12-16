@@ -12,7 +12,7 @@ Um cubo nada mais é que uma junção de pontos interligados no espaço, porém,
 
 Bom para iniciar é interessante saber de alguns pontos:
 
-- Projeção: Este projeto faz uso de uma matriz de projeção, onde os valores de um ponto 3D qualquer (x, y, z) é transformado em um ponto 2D (x, y)
+- Projeção: Este projeto faz uso de uma matriz de projeção, onde um ponto 3D qualquer (x, y, z) é transformado em um ponto 2D (x, y)
 - Rotação no espaço 3D: As matrizes de rotação são utilizadas para melhorar a ilusão de algo 3D na tela utilizando a multiplicação da matriz de rotação para o eixo escolhido e o ponto 3D.
 
 - Renderização básica com Canvas API
