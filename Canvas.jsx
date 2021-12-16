@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from "react";
-import Cube from "./Cube";
+import Mesh from "./elements/Mesh";
+import Engine from "./elements/Engine";
 
 export default function Canvas() {
     const [width, setWidth] = useState(500)
@@ -7,37 +8,39 @@ export default function Canvas() {
     let resizeObs
     const target = useRef()
     const callback = () => {
-        setWidth(target.current.parentNode.offsetWidth / 2)
-        setHeight(target.current.parentNode.offsetHeight / 2)
+        setWidth(target.current.parentNode.offsetWidth)
+        setHeight(target.current.parentNode.offsetHeight)
     }
-    const [context, setContext] = useState()
+
+    const [engine, setEngine] = useState()
     useEffect(() => {
-        setContext(target.current.getContext('2d'))
+        setEngine(new Engine(target.current))
         resizeObs = new ResizeObserver(callback)
         resizeObs.observe(target.current.parentNode)
     }, [])
 
     useEffect(() => {
-        if (context) {
-            const cube = new Cube(width / 2, height / 2, 0, height / 10)
+        if (engine) {
+            engine.meshes.push( new Mesh(width / 2, height / 2, 0, width * .03))
 
-            // cube.draw(context)
-            const targetAngle = .03
+            const targetAngle = .005
             let current = 1
             const step = () => {
+                engine.meshes.forEach(el => {
+                    el.rotate('x', targetAngle, current)
+                    el.rotate('y', targetAngle * 2, current)
+                    el.rotate('z', targetAngle / 16, current)
+                })
 
-                cube.rotate('x', targetAngle, current, context)
-                cube.rotate('y', targetAngle / 2, current, context)
-                cube.rotate('z', targetAngle / 4, current, context)
-                // current = current === 1 ? .5 : 1
+                engine.draw()
+
                 requestAnimationFrame(step);
-
             }
 
             requestAnimationFrame(step)
 
         }
-    }, [width, height, context])
+    }, [width, height, engine])
 
     return (
         <div style={{

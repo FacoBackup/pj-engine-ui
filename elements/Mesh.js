@@ -1,6 +1,9 @@
-import {multiply, projectionMatrix, rotationMatrix} from "./matrix";
 
-export default class Cube {
+import projectionMatrix from "../utils/projectionMatrix";
+import rotationMatrix from "../utils/rotationMatrix";
+import multiply from "../utils/matrixMultiply";
+
+export default class Mesh {
     vertices = []
 
     constructor(originX, originY, originZ, size) {
@@ -17,28 +20,26 @@ export default class Cube {
     }
 
 
-    rotate(axis, angle, scale, ctx) {
+    rotate(axis, angle, scale) {
         const rotationM = rotationMatrix(axis, angle)
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-
         this.vertices = this.vertices.map(v => {
             return multiply(rotationM, [[v[0]], [v[1]], [v[2]]])
         })
-
-        this.draw(ctx)
     }
 
-    _connect(indexA, indexB, projected, ctx, move) {
+    _connect(indexA, indexB, projected, ctx) {
 
-        if (move)
+        ctx.beginPath()
             ctx.moveTo(projected[indexA][0], projected[indexA][1])
         ctx.lineTo(projected[indexB][0], projected[indexB][1])
-
+        ctx.fillStyle = 'red'
+        ctx.stroke()
+        ctx.fill()
+        ctx.closePath()
 
     }
 
     draw(ctx, scale = 1) {
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
         let projectedVertices = []
         this.vertices.forEach(v => {
             const projected = multiply(projectionMatrix(scale), [[v[0]], [v[1]], [v[2]]])
@@ -51,30 +52,14 @@ export default class Cube {
             projectedVertices.push(projected)
         })
         ctx.fillStyle = 'rgba(255, 0, 0, .3)'
-        ctx.beginPath()
+
         for (let i = 0; i < 4; i++) {
             this._connect(i, (i + 1) % 4, projectedVertices, ctx, i === 0)
-
-        }
-        ctx.stroke()
-        ctx.fill()
-        ctx.closePath()
-
-        ctx.beginPath()
-        for (let i = 0; i < 4; i++) {
             this._connect(i, i + 4, projectedVertices, ctx, true)
-        }
-        ctx.stroke()
-        ctx.fill()
-        ctx.closePath()
-
-        ctx.beginPath()
-        for (let i = 0; i < 4; i++) {
             this._connect(i + 4, (i + 1) % 4 + 4, projectedVertices, ctx, i === 0)
         }
-        ctx.stroke()
-        ctx.fill()
-        ctx.closePath()
+
+
 
     }
 }

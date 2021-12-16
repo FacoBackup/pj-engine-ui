@@ -29,10 +29,10 @@ Bom para iniciar é interessante saber de alguns pontos:
 #### Código
 
 - Classes:
-  - Cube: 
+  - Mesh:
     ```js
     // Iniciando o cubo na origem x, y, z com dimensões size
-    const cube = new Cube(originX, originY, originZ, size)
+    const cube = new Mesh(originX, originY, originZ, size)
       
     // Rotaciona cubo no exio (axis), com angulo (angle) e escala (scale).
     // O call dessa função irá resultar na rerenderização do plano.
