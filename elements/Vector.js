@@ -1,5 +1,6 @@
 export default class Vector {
     matrix = []
+    normal = []
 
     constructor(x, y, z) {
         this.update(x, y, z)
@@ -12,6 +13,7 @@ export default class Vector {
 
         this.matrix = [[x], [y], [z]]
     }
+
 
 
 }

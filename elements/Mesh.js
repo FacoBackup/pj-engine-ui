@@ -86,9 +86,9 @@ export default class Mesh {
     }
 
 
-    draw(ctx, engineAttrs) {
+    draw(ctx, engineAttrs, debug) {
         this.triangles.forEach((tri, i) => {
-            tri.draw(ctx, 'rgba(255, 0, 0, .1)', '#333333', engineAttrs)
+            tri.draw(ctx, [255, 0, 0], '#333333', engineAttrs, debug)
         })
     }
 }
