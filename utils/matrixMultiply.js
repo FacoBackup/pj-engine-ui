@@ -5,9 +5,8 @@ export default function multiply(matrixA, matrixB) {
         bCols = matrixB[0].length,
         newMatrix = new Array(aRows)
 
-    if(aCols === bRows)
+    if (aCols === bRows)
         for (let rowA = 0; rowA < aRows; rowA++) {
-
             newMatrix[rowA] = new Array(bCols)
             for (let columnB = 0; columnB < bCols; columnB++) {
                 newMatrix[rowA][columnB] = 0;
@@ -18,4 +17,5 @@ export default function multiply(matrixA, matrixB) {
         }
 
     return newMatrix
+
 }
