@@ -18,8 +18,6 @@ export default class Triangle {
 
         this.vectors.forEach((vec, i) => {
             projected = [...vec.matrix]
-            // if (projected[2][0] < 100)
-                projected[2][0] += 1
             projected = projectVector(projected, engineAttrs)
 
             projected = scaleIntoView(projected[0][0], projected[1][0], projected[2][0], ctx.canvas.width, ctx.canvas.height)

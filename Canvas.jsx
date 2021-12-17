@@ -25,7 +25,7 @@ export default function Canvas() {
         const size = 50
         // setEngine()
         const engine = new Engine(target.current)
-        engine.meshes.push(new Mesh(0, 0, 0, size))
+        engine.meshes.push(new Mesh(0, 0, 2, size))
         // engine.meshes.push(new Mesh(engine.origin.x - size * 2.3, engine.origin.y - size * 2.3, engine.origin.z, size))
         // engine.meshes.push(new Mesh(engine.origin.x + size * 2.3, engine.origin.y + size * 2.3, engine.origin.z, size))
 
@@ -43,7 +43,7 @@ export default function Canvas() {
 
             engine.meshes.forEach(el => {
                 el.rotate('x', targetAngle, current)
-                // el.rotate('y', targetAngle / 2, current)
+                el.rotate('y', targetAngle / 2, current)
                 el.rotate('z', targetAngle, current)
             })
 
