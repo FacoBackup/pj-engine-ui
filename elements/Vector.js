@@ -13,7 +13,4 @@ export default class Vector {
 
         this.matrix = [[x], [y], [z]]
     }
-
-
-
 }

@@ -19,7 +19,7 @@ export function projectVector(vector, engine) {
     if (vec[vec.length - 1][0] !== 0) {
 
         for (let i = 0; i < vec.length - 1; i++)
-            vec[i][0] = vec[i][0] / (3 + vec[vec.length - 1][0])
+            vec[i][0] = vec[i][0] / (vec[vec.length - 1][0])
     }
     vec.pop()
 

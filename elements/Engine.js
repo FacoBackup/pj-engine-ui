@@ -2,19 +2,19 @@ import Vector from "./Vector";
 
 export default class Engine {
     meshes = []
-    fieldOfViewAngle = 1.5708 // 90 degrees
+    fieldOfViewAngle = 1.5708/2 // 90 degrees
 
     constructor(target) {
         this.ctx = target.getContext('2d')
         this.aspectRatio = 1
-        // target.height / target.width
+            // target.height / target.width
 
         this.fieldOfView = 1 / Math.tan(this.fieldOfViewAngle / 2)
 
         this.zNear = .01
-        this.zFar = 1000
+        this.zFar = 10000
 
-        this.camera = new Vector(target.width / 2, target.height / 2, 0)
+        this.camera = new Vector(target.width , target.height/5, 0)
         this.lightSource = new Vector(target.width / 2, target.height / 2, -1)
 
         this._updateZProjection()
