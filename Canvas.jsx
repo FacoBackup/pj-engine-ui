@@ -3,6 +3,7 @@ import Mesh from "./elements/Mesh";
 import Engine from "./elements/Engine";
 import PropTypes from "prop-types";
 import useMesh from "./hooks/useMesh";
+import useCameraMovement from "./hooks/useCameraMovement";
 
 export default function Canvas(props) {
     const [width, setWidth] = useState(500)
@@ -13,6 +14,7 @@ export default function Canvas(props) {
         setWidth(target.current.parentNode.offsetWidth)
         setHeight(target.current.parentNode.offsetHeight)
     }
+    const camera = useCameraMovement(target.current?.parentNode)
     const engine = useMesh(props.modelFile, target.current)
 
 
@@ -24,24 +26,27 @@ export default function Canvas(props) {
 
     useEffect(() => {
         if (engine) {
+            engine.camera = camera
             engine.draw()
             // const size = 100
             // const engine = new Engine(target.current)
             // engine.meshes.push(new Mesh(0, 0, 0, size))
-            let targetAngle = 0.001
+            let targetAngle = 0.002
 
             // engine.draw()
             const step = (t) => {
+
                 engine.meshes.forEach(el => {
                     el.rotate('x', targetAngle)
-                    el.rotate('z', targetAngle)
+                    // el.rotate('y', targetAngle)
+                    el.rotate('z', targetAngle/2)
                 })
                 engine.draw()
                 requestAnimationFrame(step);
             }
             requestAnimationFrame(step)
         }
-    }, [engine])
+    }, [engine, camera])
 
     return (
         <div style={{

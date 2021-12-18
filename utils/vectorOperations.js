@@ -9,7 +9,7 @@ export function crossProduct(vecA, vecB) {
     return [[aY * bZ - aZ * bY], [aZ * bX - aX * bZ], [aX * bY - aY * bX]]
 }
 
-export function normalize(x, y, z) {
+export function normalize(x, y, z, t) {
     const magnitude = Math.sqrt((x ** 2) + (y ** 2) + (z ** 2))
 
     return [[x / magnitude], [y / magnitude], [z / magnitude]]

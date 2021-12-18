@@ -18,17 +18,21 @@ export default class Triangle {
         let vecInit = [[this.vectors[0].x], [this.vectors[0].y], [this.vectors[0].z + 8]],
             vecA = [[this.vectors[1].x], [this.vectors[1].y], [this.vectors[1].z + 8]],
             vecB = [[this.vectors[2].x], [this.vectors[2].y], [this.vectors[2].z + 8]]
+        //
+        // vecInit = adjustToCamera(vecInit, engineAttrs.camera.vector.matrix)
+        // vecA = adjustToCamera(vecA, engineAttrs.camera.vector.matrix)
+        // vecB = adjustToCamera(vecB, engineAttrs.camera.vector.matrix)
 
         let normalA, normalB
-        normalA = sum(vecB, multiplyByScalar(vecInit, -1))
-        normalB = sum(vecA, multiplyByScalar(vecInit, -1))
+        normalA = sum(vecA, multiplyByScalar(vecInit, -1))
+        normalB = sum(vecB, multiplyByScalar(vecInit, -1))
 
         let crossP = crossProduct(normalA, normalB)
 
         crossP = normalize(crossP[0][0], crossP[1][0], crossP[2][0])
 
-        const adjusted = adjustToCamera(vecInit, engineAttrs.camera)
-        const dotProd = dotProduct(crossP, adjusted)
+
+        const dotProd = dotProduct(crossP, vecInit)
 
         const normalizedLightVec = normalize(engineAttrs.lightSource[0][0], engineAttrs.lightSource[1][0], engineAttrs.lightSource[2][0])
         const dotProdLightVec = dotProduct(crossP, normalizedLightVec)
@@ -38,32 +42,38 @@ export default class Triangle {
             this._draw_vector(vecInit, ctx, 0, engineAttrs)
             this._draw_vector(vecA, ctx, 1, engineAttrs)
             this._draw_vector(vecB, ctx, 2, engineAttrs)
+
             if (fillColor !== null) {
-                ctx.fillStyle = `rgba(${fillColor[0]},${fillColor[1]},${fillColor[2]},${dotProdLightVec})`
+                ctx.fillStyle = `hsl(0, 100%, ${50 + (dotProdLightVec) * 50}%)`
                 ctx.fill()
             }
 
 
             ctx.closePath()
-            if (!debug) {
-                ctx.strokeStyle = strokeColor
+            if (debug) {
+                ctx.strokeStyle = 'green'
                 ctx.stroke()
             }
         }
     }
 
     _draw_vector(vec, ctx, index, engineAttrs) {
-        let projected = [...vec]
 
-        projected = projectVector(projected, engineAttrs)
-        projected = scaleIntoView(projected[0][0], projected[1][0], projected[2][0], ctx.canvas.width, ctx.canvas.height)
+        let viewed = vec,
+                // multiplyByMatrix(engineAttrs.camera.viewMatrix, [...vec, [1]]),
+            projected,
+            scaled
+        // viewed.pop()
 
-        projected = multiplyByMatrix(projectToPlane(1), projected)
+        projected = projectVector(viewed, engineAttrs)
+        scaled = scaleIntoView(projected[0][0], projected[1][0], projected[2][0], ctx.canvas.width, ctx.canvas.height)
+
+        scaled = multiplyByMatrix(projectToPlane(1), scaled)
 
         if (index === 0)
-            ctx.moveTo(projected[0][0], projected[1][0])
+            ctx.moveTo(scaled[0][0], scaled[1][0])
         else
-            ctx.lineTo(projected[0][0], projected[1][0])
+            ctx.lineTo(scaled[0][0], scaled[1][0])
     }
 
     rotate(axis, angle) {
