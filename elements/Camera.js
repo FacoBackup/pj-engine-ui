@@ -1,47 +1,45 @@
 import Vector from "./Vector";
-import multiplyByMatrix, {constructMatrix, matrixInverse, matrixPointAt, sum} from "../utils/matrixOperations";
+import multiplyByMatrix, {
+    constructMatrix,
+    matrixInverse, MatrixMakeTranslation,
+    MatrixMultiplyVector,
+    matrixPointAt,
+    multiplyByScalar
+} from "../utils/matrixOperations";
 import rotationMatrix from "../utils/rotationMatrix";
+import {subtractVectors, sumVectors} from "../utils/vectorOperations";
 
 export default class Camera {
     vector = new Vector(0, 0, 0) // vCamera
-    vectorLookDir = new Vector(0, 1, 0) // lookDir
-
     matrixCamera = constructMatrix(4, 4, 0)
-    vecUp = new Vector(0, 1, -1)
-    viewMatrix =  constructMatrix(4, 4, 0)
+    viewMatrix = constructMatrix(4, 4, 0)
     fYaw = 0
+    forward = 0
+    worldMatrix = constructMatrix(4, 4, 0)
+    translatedMatrix = MatrixMakeTranslation(0, 0, 5)
+
+
     constructor(originX, originY, originZ) {
+        this.worldMatrix[0][0] = 1
+        this.worldMatrix[1][1] = 1
+        this.worldMatrix[2][2] = 1
+        this.worldMatrix[3][3] = 1
+        this.worldMatrix = multiplyByMatrix(this.worldMatrix, this.translatedMatrix)
+
         this.update(originX, originY, originZ)
     }
 
-    update(x, y, z, yaw=this.fYaw) {
-
+    update(x = this.vector.x, y = this.vector.y, z = this.vector.z, yaw = this.fYaw, forward = this.forward) {
         this.vector.update(x, y, z)
-        // this.lookAt.update(x, y, z)
-        // const s = sum(this.vector.matrix, this.lookAt.matrix)
-        // this.pointAt.update(s[0][0], s[1][0], s[2][0])
-
+        this.vector.update(undefined, undefined, forward)
+        this.forward = forward
         this.fYaw = yaw
-        const rotationM = rotationMatrix('y', yaw)
-        // console.log(this.pointAt, rotationM)
-        let vectorTarget =  new Vector(0, 0, 1)
+        const matrixCameraRotation = rotationMatrix('y', yaw)
+        const vectorLookDir = MatrixMultiplyVector(matrixCameraRotation, [[0], [0], [1], [1]])
+        const vecUp = new Vector(0, 1, 1)
+        let vectorTarget = sumVectors(this.vector.matrix, vectorLookDir)
 
-        const rotatedC = multiplyByMatrix(rotationM, vectorTarget.matrix)
-
-        this.vectorLookDir.update(rotatedC[0][0],rotatedC[1][0],rotatedC[2][0])
-        const addedRotation = sum(rotatedC, this.vector.matrix)
-        vectorTarget.update(addedRotation[0][0],addedRotation[1][0],addedRotation[2][0])
-
-        this.matrixCamera = matrixPointAt(this.vector.matrix, vectorTarget.matrix, this.vecUp.matrix)
-
+        this.matrixCamera = matrixPointAt(this.vector.matrix, vectorTarget, vecUp.matrix)
         this.viewMatrix = matrixInverse(this.matrixCamera)
-        console.log(...this.viewMatrix)
-
     }
-
-    // update(originX, originY, originZ){
-    //     this.vector.update(originX, originY, originZ)
-    // }
-
-
 }

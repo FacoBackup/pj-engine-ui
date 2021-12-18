@@ -34,12 +34,13 @@ export default function useMesh(filePath, target, width, height) {
                 if (vertices[tri.vecA] && vertices[tri.vecB] && vertices[tri.vecC])
                     res.push(new Triangle(vertices[tri.vecA], vertices[tri.vecB], vertices[tri.vecC]))
             })
+
             m = new Mesh(res)
             setMesh(m)
             engine.meshes.push(m)
             engine.draw()
         }
-        if (engine && m) {
+        if (engine && m && engine.meshes.length === 0) {
             engine.meshes.push(m)
             engine.draw()
         }

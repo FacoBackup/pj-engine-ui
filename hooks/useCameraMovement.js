@@ -17,36 +17,36 @@ export default function useCameraMovement(target) {
         if (isFocused)
             switch (event.code) {
                 case 'KeyW': {
-                    // camera.update(camera.vector.x, camera.vector.y , camera.vector.z +1)
+                    camera.update(undefined, undefined, undefined, undefined, camera.forward + 1)
                     break
                 }
                 case 'KeyS': {
-                    // camera.update(camera.vector.x, camera.vector.y , camera.vector.z -1)
+                    camera.update(undefined, undefined, undefined, undefined, camera.forward - 1)
                     break
                 }
                 case 'KeyA': {
-                    camera.update(camera.vector.x, camera.vector.y , camera.vector.z, camera.fYaw - .01)
+                    camera.update(undefined, undefined, undefined, camera.fYaw - .01)
                     break
                 }
                 case 'KeyD': {
-                    camera.update(camera.vector.x, camera.vector.y , camera.vector.z, camera.fYaw + .01)
+                    camera.update(undefined, undefined, camera.vector.z, camera.fYaw + .01)
                     break
                 }
 
                 case 'ArrowUp': {
-                    camera.update(camera.vector.x, camera.vector.y + 1, camera.vector.z)
+                    camera.update(undefined, camera.vector.y + 1, undefined)
                     break
                 }
                 case 'ArrowDown': {
-                    camera.update(camera.vector.x, camera.vector.y - 1, camera.vector.z)
+                    camera.update(undefined, camera.vector.y - 1, undefined)
                     break
                 }
                 case 'ArrowLeft': {
-                    camera.update(camera.vector.x - 1, camera.vector.y, camera.vector.z)
+                    camera.update(camera.vector.x - 1, undefined, undefined)
                     break
                 }
                 case 'ArrowRight': {
-                    camera.update(camera.vector.x + 1, camera.vector.y, camera.vector.z)
+                    camera.update(camera.vector.x + 1, undefined, undefined)
                     break
                 }
                 default:

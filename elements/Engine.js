@@ -27,8 +27,6 @@ export default class Engine {
 
     draw(debug) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
-
-        // this.lightSource.update(this.camera.vector.x, this.camera.vector.y, -1)
         this.meshes.forEach(el => {
             el.draw(this.ctx, {
                 fieldOfView: this.fieldOfView,

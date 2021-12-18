@@ -1,6 +1,4 @@
 import {useEffect, useRef, useState} from "react";
-import Mesh from "./elements/Mesh";
-import Engine from "./elements/Engine";
 import PropTypes from "prop-types";
 import useMesh from "./hooks/useMesh";
 import useCameraMovement from "./hooks/useCameraMovement";
@@ -28,19 +26,15 @@ export default function Canvas(props) {
         if (engine) {
             engine.camera = camera
             engine.draw()
-            // const size = 100
-            // const engine = new Engine(target.current)
-            // engine.meshes.push(new Mesh(0, 0, 0, size))
-            let targetAngle = 0.002
+            let targetAngle = 0.001
 
-            // engine.draw()
-            const step = (t) => {
+            const step = () => {
 
-                engine.meshes.forEach(el => {
-                    el.rotate('x', targetAngle)
-                    // el.rotate('y', targetAngle)
-                    el.rotate('z', targetAngle/2)
-                })
+                // engine.meshes.forEach(el => {
+                //     // el.rotate('x', targetAngle)
+                //     el.rotate('y', targetAngle)
+                //     // el.rotate('z', targetAngle/2)
+                // })
                 engine.draw()
                 requestAnimationFrame(step);
             }
