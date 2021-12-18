@@ -11,8 +11,8 @@ export default class Engine {
 
         this.fieldOfView = 1 / Math.tan(this.fieldOfViewAngle / 2)
 
-        this.zNear = .01
-        this.zFar = 10000
+        this.zNear = .001
+        this.zFar = 1000
 
         this.lightSource = new Vector(0, 0, -1)
 
