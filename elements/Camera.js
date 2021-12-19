@@ -34,12 +34,10 @@ export default class Camera {
 
         this.forward = forward
         this.fYaw = yaw
-        const matrixCameraRotation = rotationMatrix('y', this.fYaw)
-        const vectorLookDir = MatrixMultiplyVector(matrixCameraRotation, [[0], [0], [1], [1]])
-        const vecUp = new Vector(0, 1, 0)
-        let vectorTarget = sumVectors(this.vector.matrix, vectorLookDir)
+        const vectorLookDir = MatrixMultiplyVector(rotationMatrix('y', this.fYaw), [[0], [0], [1], [1]])
 
-        this.matrixCamera = matrixPointAt(this.vector.matrix, vectorTarget, vecUp.matrix)
+
+        this.matrixCamera = matrixPointAt(this.vector.matrix, sumVectors(this.vector.matrix, vectorLookDir), [[0], [1], [0], [1]])
         this.viewMatrix = matrixInverse(this.matrixCamera)
     }
 }

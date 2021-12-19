@@ -10,5 +10,6 @@
     "down": "ArrowDown"
   },
   "fieldOfView": "auto",
-  "aspectRation": "auto"
+  "aspectRation": "auto",
+  "wireframeColor": "red"
 }

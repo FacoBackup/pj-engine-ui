@@ -21,11 +21,11 @@ export default function useCameraMovement(target) {
         if (isFocused)
             switch (event.code) {
                 case keybindings.keybindings.forwards: {
-                    camera.update(undefined, undefined, undefined, undefined, camera.forward + 1)
+                    camera.update(undefined, undefined, undefined, undefined, camera.forward + .1)
                     break
                 }
                 case keybindings.keybindings.backwards: {
-                    camera.update(undefined, undefined, undefined, undefined, camera.forward - 1)
+                    camera.update(undefined, undefined, undefined, undefined, camera.forward - .1)
                     break
                 }
                 case keybindings.keybindings.rotateLeft: {
@@ -33,7 +33,7 @@ export default function useCameraMovement(target) {
                     break
                 }
                 case keybindings.keybindings.rotateRight: {
-                    camera.update(undefined, undefined, camera.vector.z, camera.fYaw + .05)
+                    camera.update(undefined, undefined, undefined, camera.fYaw + .05)
                     break
                 }
                 case keybindings.keybindings.up: {

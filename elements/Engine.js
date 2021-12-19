@@ -25,7 +25,7 @@ export default class Engine {
     }
 
 
-    draw(debug) {
+    draw(wireframe, noTexture) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
         this.meshes.forEach(el => {
             el.draw(this.ctx, {
@@ -36,7 +36,7 @@ export default class Engine {
                 zNear: this.zNear,
                 camera: this.camera,
                 lightSource: this.lightSource.matrix,
-            }, debug)
+            }, wireframe, noTexture)
         })
     }
 }

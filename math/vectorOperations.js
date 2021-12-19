@@ -1,4 +1,4 @@
-import multiplyByMatrix, {multiplyByScalar} from "./matrixOperations";
+import multiplyByMatrix from "./matrixOperations";
 import Vector from "../elements/Vector";
 import Triangle from "../elements/Triangle";
 
@@ -100,7 +100,7 @@ export function vectorIntersectPlane(planePoint, planeNormal, lineStart, lineEnd
 
 export function clipAgainstPlane(plane_p, plane_n, in_tri) {
 
-    let planeN = normalise(plane_n[0][0], plane_n[2][0], plane_n[2][0]);
+    let planeN = normalise(plane_n[0][0], plane_n[1][0], plane_n[2][0]);
 
     let vectors = []
     in_tri.vectors.forEach(vec => {
@@ -110,44 +110,51 @@ export function clipAgainstPlane(plane_p, plane_n, in_tri) {
         out_tri2 = new Triangle(vectors[0], vectors[1], vectors[2])
 
     const dist = (p) => {
-        let n = normalise(p.x, p.y, p.z);
-        return (dotProduct(planeN, n) - dotProduct(planeN, plane_p));
+        return (planeN[0][0] * p.x + planeN[1][0] * p.y + planeN[2][0] * p.z - dotProduct(planeN, plane_p))
     }
 
     let nInsidePointCount = 0,
         nOutsidePointCount = 0,
-        outside_points = new Array(3),
-        inside_points = new Array(3)
+        outsidePoints = new Array(3),
+        insidePoints = new Array(3)
 
     let d0 = dist(in_tri.vectors[0]);
     let d1 = dist(in_tri.vectors[1]);
     let d2 = dist(in_tri.vectors[2]);
 
     if (d0 >= 0)
-        inside_points[nInsidePointCount++] = in_tri.vectors[0].matrix
+        insidePoints[nInsidePointCount++] = in_tri.vectors[0].matrix
     else
-        outside_points[nOutsidePointCount++] = in_tri.vectors[0].matrix
+        outsidePoints[nOutsidePointCount++] = in_tri.vectors[0].matrix
 
     if (d1 >= 0)
-        inside_points[nInsidePointCount++] = in_tri.vectors[1].matrix
+        insidePoints[nInsidePointCount++] = in_tri.vectors[1].matrix
     else
-        outside_points[nOutsidePointCount++] = in_tri.vectors[1].matrix
+        outsidePoints[nOutsidePointCount++] = in_tri.vectors[1].matrix
 
     if (d2 >= 0)
-        inside_points[nInsidePointCount++] = in_tri.vectors[2].matrix
+        insidePoints[nInsidePointCount++] = in_tri.vectors[2].matrix
     else
-        outside_points[nOutsidePointCount++] = in_tri.vectors[2].matrix
+        outsidePoints[nOutsidePointCount++] = in_tri.vectors[2].matrix
 
-    if (nInsidePointCount === 0)
+    if (nInsidePointCount === 0) {
+
         return {quantity: 0, triangles: []}
+    }
 
-    if (nInsidePointCount === 3)
-        return {quantity: 1, triangles: [out_tri1]}
+    if (nInsidePointCount === 3) {
+        // in_tri.color = 'blue'
+
+        return {quantity: 1, triangles: [in_tri]}
+    }
 
     if (nInsidePointCount === 1 && nOutsidePointCount === 2) {
-        out_tri1.vectors[0] = new Vector(inside_points[0][0][0], inside_points[0][1][0], inside_points[0][2][0])
-        const vectorTwo = vectorIntersectPlane(plane_p, planeN, inside_points[0], outside_points[0])
-        const vectorThree = vectorIntersectPlane(plane_p, planeN, inside_points[0], outside_points[1])
+        out_tri1.color = in_tri.color //'red'
+
+        out_tri1.vectors[0] = new Vector(insidePoints[0][0][0], insidePoints[0][1][0], insidePoints[0][2][0])
+
+        const vectorTwo = vectorIntersectPlane(plane_p, planeN, insidePoints[0], outsidePoints[0])
+        const vectorThree = vectorIntersectPlane(plane_p, planeN, insidePoints[0], outsidePoints[1])
         out_tri1.vectors[1] = new Vector(vectorTwo[0][0], vectorTwo[1][0], vectorTwo[2][0])
         out_tri1.vectors[2] = new Vector(vectorThree[0][0], vectorThree[1][0], vectorThree[2][0])
 
@@ -155,14 +162,18 @@ export function clipAgainstPlane(plane_p, plane_n, in_tri) {
     }
 
     if (nInsidePointCount === 2 && nOutsidePointCount === 1) {
-        out_tri1.vectors[0] = new Vector(inside_points[0][0][0], inside_points[0][1][0], inside_points[0][2][0])
-        out_tri1.vectors[1] = new Vector(inside_points[1][0][0], inside_points[1][1][0], inside_points[1][2][0])
-        const vectorThree = vectorIntersectPlane(plane_p, planeN, inside_points[0], outside_points[0])
+
+        out_tri1.color = in_tri.color //'red'
+        out_tri2.color = in_tri.color // 'green'
+
+        out_tri1.vectors[0] = new Vector(insidePoints[0][0][0], insidePoints[0][1][0], insidePoints[0][2][0])
+        out_tri1.vectors[1] = new Vector(insidePoints[1][0][0], insidePoints[1][1][0], insidePoints[1][2][0])
+        const vectorThree = vectorIntersectPlane(plane_p, planeN, insidePoints[0], outsidePoints[0])
         out_tri1.vectors[2] = new Vector(vectorThree[0][0], vectorThree[1][0], vectorThree[2][0])
 
-        out_tri2.vectors[0] = new Vector(inside_points[1][0][0], inside_points[1][1][0], inside_points[1][2][0])
+        out_tri2.vectors[0] = new Vector(insidePoints[1][0][0], insidePoints[1][1][0], insidePoints[1][2][0])
         out_tri2.vectors[1] = new Vector(vectorThree[0][0], vectorThree[1][0], vectorThree[2][0])
-        const outTwoVectorThree = vectorIntersectPlane(plane_p, planeN, inside_points[1], outside_points[0])
+        const outTwoVectorThree = vectorIntersectPlane(plane_p, planeN, insidePoints[1], outsidePoints[0])
         out_tri2.vectors[2] = new Vector(outTwoVectorThree[0][0], outTwoVectorThree[1][0], outTwoVectorThree[2][0])
 
         return {quantity: 2, triangles: [out_tri1, out_tri2]}
