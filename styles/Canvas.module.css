@@ -64,5 +64,9 @@
     height: 100%;
     width: 1px;
     background-color: var(--fabric-border-secondary);
+}
 
+.viewport{
+    border-radius: 8px;
+    border: var(--fabric-border-primary) 1px solid;
 }

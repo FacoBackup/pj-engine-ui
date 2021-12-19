@@ -1,7 +1,7 @@
 import Vector from "./Vector";
 import {MatrixMultiplyVector} from "../math/matrixOperations";
 import rotationMatrix from "../math/rotationMatrix";
-import conf from '../config.json'
+import conf from '../../config.json'
 
 export default class Triangle {
     vectors = []
@@ -13,8 +13,18 @@ export default class Triangle {
         this.vectors.push(new Vector(...vecC))
     }
 
-    draw(ctx, wireframe, noTexture) {
+    draw(ctx, wireframe, texturing, vertex) {
+        if (vertex) {
+            this.vectors.forEach((vec, index) => {
+                ctx.beginPath()
 
+                ctx.moveTo(vec.x, vec.y)
+
+                ctx.arc(vec.x, vec.y, conf.vertexRadius ? conf.vertexRadius : 2, 0, Math.PI * 2)
+                ctx.fillStyle = conf.vertexColor ? conf.vertexColor : 'blue'
+                ctx.fill()
+            })
+        }
         ctx.beginPath()
         this.vectors.forEach((vec, index) => {
 
@@ -23,16 +33,17 @@ export default class Triangle {
             else
                 ctx.lineTo(vec.x, vec.y)
         })
-        if (!noTexture) {
+        if (texturing) {
             ctx.fillStyle = this.color
             ctx.fill()
         }
         if (wireframe)
             ctx.strokeStyle = conf.wireframeColor ? conf.wireframeColor : 'green'
         else
-            ctx.strokeStyle =  this.color
+            ctx.strokeStyle = this.color
         ctx.closePath()
-        ctx.stroke()
+        if (texturing || wireframe)
+            ctx.stroke()
     }
 
 

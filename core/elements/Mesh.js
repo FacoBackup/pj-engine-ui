@@ -44,7 +44,7 @@ export default class Mesh {
                               aspectRatio,
                               zScale,
                               zOffset
-                          }, canvasWidth, canvasHeight) {
+                          }, canvasWidth, canvasHeight, shading) {
         let response = []
         for (let current = 0; current < this.triangles.length; current++) {
 
@@ -71,7 +71,7 @@ export default class Mesh {
                 vecB = MatrixMultiplyVector(camera.viewMatrix, vecB)
 
                 let newTri = new Triangle([vecInit[0][0], vecInit[1][0], vecInit[2][0]], [vecA[0][0], vecA[1][0], vecA[2][0]], [vecB[0][0], vecB[1][0], vecB[2][0]])
-                newTri.color = `hsl(0, 10%, ${dotProdLightVec < .3 ? 30 : (Math.abs(dotProdLightVec).toFixed(2) * 50)}%)`
+                newTri.color = `hsl(0, 10%, ${shading ? (dotProdLightVec < .3 ? 30 : (Math.abs(dotProdLightVec).toFixed(2) * 50)) : 50}%)`
 
                 const clipped = clipAgainstPlane([[0], [0], [zNear], [0]], [[0], [0], [1], [0]], newTri)
                 for (let currentClipped = 0; currentClipped < clipped.quantity; currentClipped++) {
@@ -83,7 +83,7 @@ export default class Mesh {
         return response
     }
 
-    draw(ctx, engineAttrs, wireframe, noTexture, debug) {
+    draw(ctx, engineAttrs, wireframe, texturing, shading,vertex, callback) {
 
         const sortTriangles = (triangleA, triangleB) => {
             let z1 = Math.abs(triangleA.vectors[0].z + triangleA.vectors[1].z + triangleA.vectors[2].z) / 3
@@ -100,7 +100,7 @@ export default class Mesh {
 
 
         const startTriangleMapping = performance.now()
-        let toRaster = this._getTrianglesToRaster(engineAttrs, ctx.canvas.width, ctx.canvas.height)
+        let toRaster = this._getTrianglesToRaster(engineAttrs, ctx.canvas.width, ctx.canvas.height, shading)
         const endTriangleMapping = performance.now()
 
         const startSort = performance.now()
@@ -167,12 +167,12 @@ export default class Mesh {
             endClipping = performance.now()
             startDrawing = performance.now()
             listTriangles.forEach(tri => {
-                tri.draw(ctx, wireframe, noTexture)
+                tri.draw(ctx, wireframe, texturing,vertex)
             })
             endDrawing = performance.now()
         }
 
-        debug({
+        callback({
             drawing:endDrawing - startDrawing,
             sort: endSort - startSort,
             mapping: endTriangleMapping - startTriangleMapping,

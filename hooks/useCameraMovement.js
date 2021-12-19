@@ -1,18 +1,20 @@
 import {useEffect, useState} from "react";
-import Camera from "../elements/Camera";
-import keybindings from '../config.json'
-export default function useCameraMovement(target) {
+import Camera from "../core/elements/Camera";
+import conf from '../config.json'
+export default function useCameraMovement(target, debugEnabled) {
     const [isFocused, setIsFocused] = useState(false)
     const camera = new Camera(0, 0, 0)
 
     const handleClick = (event) => {
 
         if (target && target.contains(event.target)) {
-            target.style.cursor = 'none'
+            if(!debugEnabled)
+                target.style.cursor = 'none'
             setIsFocused(true)
         }
         else {
-            target.style.cursor = 'default'
+            if(!debugEnabled)
+                target.style.cursor = 'default'
             setIsFocused(false)
         }
     }
@@ -20,36 +22,36 @@ export default function useCameraMovement(target) {
     const handleKeydown = (event) => {
         if (isFocused)
             switch (event.code) {
-                case keybindings.keybindings.forwards: {
-                    camera.update(undefined, undefined, undefined, undefined, camera.forward + .1)
+                case conf.keybindings.forwards: {
+                    camera.update(undefined, undefined, undefined, undefined, camera.forward + (conf.sensitivity.forwards ? conf.sensitivity.forwards : .1))
                     break
                 }
-                case keybindings.keybindings.backwards: {
-                    camera.update(undefined, undefined, undefined, undefined, camera.forward - .1)
+                case conf.keybindings.backwards: {
+                    camera.update(undefined, undefined, undefined, undefined, camera.forward - (conf.sensitivity.backwards ? conf.sensitivity.backwards : .1))
                     break
                 }
-                case keybindings.keybindings.rotateLeft: {
-                    camera.update(undefined, undefined, undefined, camera.fYaw - .05)
+                case conf.keybindings.rotateLeft: {
+                    camera.update(undefined, undefined, undefined, camera.fYaw - ( conf.sensitivity.rotationLeft ? conf.sensitivity.rotationLeft : .05))
                     break
                 }
-                case keybindings.keybindings.rotateRight: {
-                    camera.update(undefined, undefined, undefined, camera.fYaw + .05)
+                case conf.keybindings.rotateRight: {
+                    camera.update(undefined, undefined, undefined, camera.fYaw + (conf.sensitivity.rotationRight ? conf.sensitivity.rotationRight : .05))
                     break
                 }
-                case keybindings.keybindings.up: {
-                    camera.update(undefined, camera.vector.y + 1, undefined)
+                case conf.keybindings.up: {
+                    camera.update(undefined, camera.vector.y + (conf.sensitivity.up ? conf.sensitivity.up : 1), undefined)
                     break
                 }
-                case keybindings.keybindings.down: {
-                    camera.update(undefined, camera.vector.y - 1, undefined)
+                case conf.keybindings.down: {
+                    camera.update(undefined, camera.vector.y - (conf.sensitivity.down ? conf.sensitivity.down : 1), undefined)
                     break
                 }
-                case keybindings.keybindings.left: {
-                    camera.update(camera.vector.x - 1, undefined, undefined)
+                case conf.keybindings.left: {
+                    camera.update(camera.vector.x - (conf.sensitivity.left ? conf.sensitivity.left : 1), undefined, undefined)
                     break
                 }
-                case keybindings.keybindings.right: {
-                    camera.update(camera.vector.x + 1, undefined, undefined)
+                case conf.keybindings.right: {
+                    camera.update(camera.vector.x + (conf.sensitivity.right ? conf.sensitivity.right : 1), undefined, undefined)
                     break
                 }
                 default:

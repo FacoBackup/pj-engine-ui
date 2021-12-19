@@ -1,19 +1,18 @@
 import PropTypes from "prop-types";
-import styles from '../styles/Canvas.module.css'
+import styles from '../../styles/Canvas.module.css'
 import profiler from "./profiler";
 
 export function debugRunner({
                                 targetRef,
                                 engine,
-
+                                shading,
                                 wireframeMode,
-                                noTexture,
+                                texturing,
                                 rotation,
-
-                                profiling
+                                vertex
                             }) {
     let times = [], fps, performanceMetrics = {}
-    console.log(profiling)
+
     const execDebug = (t) => {
         let start = performance.now(), stop
         if (rotation !== undefined) {
@@ -26,10 +25,10 @@ export function debugRunner({
                     el.rotate('z', rotation.radiansAngle)
             })
         }
-        engine.draw(wireframeMode, noTexture, perf => performanceMetrics = perf)
-
+        engine.draw(wireframeMode, texturing, shading, vertex, perf => performanceMetrics = perf)
         stop = performance.now()
-        targetRef.innerHTML = profiler({...profiling, engine, fps, milliseconds: stop - start, performanceData: performanceMetrics})
+
+        targetRef.innerHTML = profiler({engine, fps, milliseconds: stop - start, performanceData: performanceMetrics})
         while (times.length > 0 && times[0] <= start - 1000) {
             times.shift();
         }

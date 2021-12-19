@@ -1,7 +1,7 @@
 import Vector from "./Vector";
 import Camera from "./Camera";
 
-export default class Engine {
+export default class RenderingEngine {
     meshes = []
     fieldOfViewAngle = 1.5708 / 2 // 90 degrees
     camera = new Camera(0, 0, 0)
@@ -26,7 +26,7 @@ export default class Engine {
     }
 
 
-    draw(wireframe, noTexture, debug=() => null) {
+    draw(wireframe, texturing, shading, vertex, callback = () => null) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
         this.meshes.forEach(el => {
             el.draw(this.ctx, {
@@ -36,8 +36,8 @@ export default class Engine {
                 zOffset: this.zOffset,
                 zNear: this.zNear,
                 camera: this.camera,
-                lightSource: this.lightSource.matrix,
-            }, wireframe, noTexture, debug)
+                lightSource: this.lightSource.matrix
+            }, wireframe, texturing, shading,vertex, callback)
         })
     }
 }
