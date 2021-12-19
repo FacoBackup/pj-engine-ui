@@ -6,6 +6,7 @@ export default class Vector {
     }
 
     update(x=this.x, y=this.y, z=this.z, w=this.w) {
+
         this.x = x
         this.y = y
         this.z = z

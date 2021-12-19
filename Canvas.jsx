@@ -25,15 +25,15 @@ export default function Canvas(props) {
     useEffect(() => {
         if (engine) {
             engine.camera = camera
-            engine.draw(true)
-            let targetAngle = 0.001
+            engine.draw()
+            let targetAngle = 0.002
 
             const step = () => {
 
                 engine.meshes.forEach(el => {
                     // el.rotate('x', targetAngle)
                     el.rotate('y', targetAngle)
-                    el.rotate('z', targetAngle/2)
+                    // el.rotate('z', targetAngle/2)
                 })
                 engine.draw()
                 requestAnimationFrame(step);

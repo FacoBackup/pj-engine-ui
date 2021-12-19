@@ -30,8 +30,8 @@ export default class Camera {
     }
 
     update(x = this.vector.x, y = this.vector.y, z = this.vector.z, yaw = this.fYaw, forward = this.forward) {
-        this.vector.update(x, y, z)
-        this.vector.update(undefined, undefined, forward)
+        this.vector.update(x, y, forward)
+
         this.forward = forward
         this.fYaw = yaw
         const matrixCameraRotation = rotationMatrix('y', yaw)

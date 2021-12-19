@@ -106,6 +106,7 @@ export function matrixInverse(m) {
 }
 
 export function MatrixMultiplyVector(matrix, vec) {
+
     let newVec = constructMatrix(4, 1)
     newVec[0][0] = vec[0][0] * matrix[0][0] + vec[1][0] * matrix[1][0] + vec[2][0] * matrix[2][0] + vec[3][0] * matrix[3][0];
     newVec[1][0] = vec[0][0] * matrix[0][1] + vec[1][0] * matrix[1][1] + vec[2][0] * matrix[2][1] + vec[3][0] * matrix[3][1];

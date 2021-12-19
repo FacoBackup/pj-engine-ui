@@ -15,7 +15,8 @@ export function crossProduct(vecA, vecB) {
 
 export function normalise(x, y, z) {
     const magnitude = Math.sqrt((x ** 2) + (y ** 2) + (z ** 2))
-
+    // if(isNaN(magnitude))
+    //     console.trace(magnitude, x, y, z)
     return [[x / magnitude], [y / magnitude], [z / magnitude], [1]]
 }
 
@@ -64,11 +65,9 @@ export function projectVector(vector, fieldOfView, aspectRatio, zScale, zOffset)
     ]
     let vec = [...vector]
 
-    // vec.vectorsush([1])
     vec = multiplyByMatrix(matrix, vec)
 
     if (vec[vec.length - 1][0] !== 0) {
-
         for (let i = 0; i < vec.length - 1; i++)
             vec[i][0] = vec[i][0] / (vec[vec.length - 1][0])
     }
@@ -87,7 +86,8 @@ export function scaleIntoView(vec, screenWidth, screenHeight) {
 }
 
 export function vectorIntersectPlane(planePoint, planeNormal, lineStart, lineEnd) {
-    let planeN = normalise(planeNormal),
+
+    let planeN = normalise(planeNormal[0][0],planeNormal[1][0],planeNormal[2][0]),
         planeD = -dotProduct(planeN, planePoint),
         ad = dotProduct(lineStart, planeN),
         bd = dotProduct(lineEnd, planeN),
@@ -100,13 +100,21 @@ export function vectorIntersectPlane(planePoint, planeNormal, lineStart, lineEnd
 
 
 export function clipAgainstPlane(plane_p, plane_n, in_tri) {
-    plane_n = normalise(plane_n);
-    let out_tri1 = new Triangle(),
-        out_tri2 = new Triangle()
+
+    let planeN = normalise(plane_n[0][0],plane_n[2][0],plane_n[2][0]);
+
+    let vectors = []
+    in_tri.vectors.forEach(vec => {
+        vectors.push([vec.x, vec.y, vec.z])
+    })
+    let out_tri1 = new Triangle(vectors[0], vectors[1], vectors[2]),
+        out_tri2 = new Triangle(vectors[0], vectors[1], vectors[2])
 
     const dist = (p) => {
-        let n = normalise(p);
-        return (dotProduct(plane_n, n) - dotProduct(plane_n, plane_p));
+        // console.log(p)
+        let n = normalise(p.x,p.y,p.z);
+
+        return (dotProduct(planeN, n) - dotProduct(planeN, plane_p));
     }
 
     let nInsidePointCount = 0,
@@ -119,45 +127,48 @@ export function clipAgainstPlane(plane_p, plane_n, in_tri) {
     let d2 = dist(in_tri.vectors[2]);
 
     if (d0 >= 0)
-        inside_points[nInsidePointCount++] = in_tri.vectors[0]
+        inside_points[nInsidePointCount++] = in_tri.vectors[0].matrix
     else
-        outside_points[nOutsidePointCount++] = in_tri.vectors[0]
+        outside_points[nOutsidePointCount++] = in_tri.vectors[0].matrix
 
     if (d1 >= 0)
-        inside_points[nInsidePointCount++] = in_tri.vectors[1]
+        inside_points[nInsidePointCount++] = in_tri.vectors[1].matrix
     else
-        outside_points[nOutsidePointCount++] = in_tri.vectors[1]
+        outside_points[nOutsidePointCount++] = in_tri.vectors[1].matrix
 
     if (d2 >= 0)
-        inside_points[nInsidePointCount++] = in_tri.vectors[2]
+        inside_points[nInsidePointCount++] = in_tri.vectors[2].matrix
     else
-        outside_points[nOutsidePointCount++] = in_tri.vectors[2]
+        outside_points[nOutsidePointCount++] = in_tri.vectors[2].matrix
 
     if (nInsidePointCount === 0)
-        return 0
+        return {quantity: 0, triangles: []}
 
     if (nInsidePointCount === 3) {
-        out_tri1.vectors = in_tri.vectors
         return {quantity: 1, triangles: [out_tri1]}
     }
 
     if (nInsidePointCount === 1 && nOutsidePointCount === 2) {
-        out_tri1.vectors[0] = inside_points[0]
-        out_tri1.vectors[1] = vectorIntersectPlane(plane_p, plane_n, inside_points[0], outside_points[0])
-        out_tri1.vectors[2] = vectorIntersectPlane(plane_p, plane_n, inside_points[0], outside_points[1])
+        out_tri1.vectors[0] = new Vector(inside_points[0][0][0], inside_points[0][1][0], inside_points[0][2][0])
+        const vectorTwo = vectorIntersectPlane(plane_p, planeN, inside_points[0], outside_points[0])
+        const vectorThree = vectorIntersectPlane(plane_p, planeN, inside_points[0], outside_points[1])
+        out_tri1.vectors[1] = new Vector(vectorTwo[0][0], vectorTwo[1][0], vectorTwo[2][0])
+        out_tri1.vectors[2] = new Vector(vectorThree[0][0], vectorThree[1][0], vectorThree[2][0])
 
         return {quantity: 1, triangles: [out_tri1]}
     }
 
     if (nInsidePointCount === 2 && nOutsidePointCount === 1) {
-        out_tri1.vectors[0] = inside_points[0]
-        out_tri1.vectors[1] = inside_points[1];
-        out_tri1.vectors[2] = vectorIntersectPlane(plane_p, plane_n, inside_points[0], outside_points[0])
+        out_tri1.vectors[0] = new Vector(inside_points[0][0][0], inside_points[0][1][0], inside_points[0][2][0])
+        out_tri1.vectors[1] = new Vector(inside_points[1][0][0], inside_points[1][1][0], inside_points[1][2][0])
+        const vectorThree = vectorIntersectPlane(plane_p, planeN, inside_points[0], outside_points[0])
+        out_tri1.vectors[2] = new Vector(vectorThree[0][0], vectorThree[1][0], vectorThree[2][0])
 
-        out_tri2.vectors[0] = inside_points[1];
-        out_tri2.vectors[1] = out_tri1.vectors[2];
-        out_tri2.vectors[2] = vectorIntersectPlane(plane_p, plane_n, inside_points[1], outside_points[0])
+        out_tri2.vectors[0] = new Vector(inside_points[1][0][0], inside_points[1][1][0], inside_points[1][2][0])
+        out_tri2.vectors[1] = new Vector(vectorThree[0][0], vectorThree[1][0], vectorThree[2][0])
+        const outTwoVectorThree = vectorIntersectPlane(plane_p, planeN, inside_points[1], outside_points[0])
+        out_tri2.vectors[2] = new Vector(outTwoVectorThree[0][0], outTwoVectorThree[1][0], outTwoVectorThree[2][0])
 
-        return  {quantity: 2, triangles: [out_tri1, out_tri2]}
+        return {quantity: 2, triangles: [out_tri1, out_tri2]}
     }
 }
