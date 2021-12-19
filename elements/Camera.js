@@ -16,7 +16,7 @@ export default class Camera {
     fYaw = 0
     forward = 0
     worldMatrix = constructMatrix(4, 4, 0)
-    translatedMatrix = MatrixMakeTranslation(0, 0, 5)
+    translatedMatrix = MatrixMakeTranslation(0, 0, 50)
 
 
     constructor(originX, originY, originZ) {

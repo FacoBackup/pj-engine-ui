@@ -17,14 +17,15 @@ export default function Canvas(props) {
     const camera = useCameraMovement(target.current?.parentNode)
     const engine = useMesh(props.modelFile, target.current)
 
-
     useEffect(() => {
 
         resizeObs = new ResizeObserver(callback)
         resizeObs.observe(target.current.parentNode)
     }, [])
     const ref = useRef()
+
     let executing = false
+
     useEffect(() => {
         if (engine && !executing) {
             engine.camera = camera
@@ -51,13 +52,19 @@ export default function Canvas(props) {
 Canvas.propTypes = {
     modelFile: PropTypes.string,
     debug: PropTypes.shape({
-        drawCallMilliseconds: PropTypes.bool,
-        framerate: PropTypes.bool,
         wireframeMode: PropTypes.bool,
         noTexture: PropTypes.bool,
         rotation: PropTypes.shape({
-            rotationAxis: PropTypes.oneOf(['y', 'x', 'z']),
+            rotationAxis: PropTypes.arrayOf(PropTypes.oneOf(['y', 'x', 'z'])),
             radiansAngle: PropTypes.number
+        }),
+
+        profiling: PropTypes.shape({
+            performanceMetrics: PropTypes.bool,
+
+            triangleCount: PropTypes.bool,
+            framerate: PropTypes.bool,
+            verticesCount: PropTypes.bool,
         })
     })
 }

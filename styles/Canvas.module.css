@@ -20,8 +20,13 @@
     height: 5vh;
 
     font-size: .9rem;
-    text-align: left;
-    padding: 8px;
+
+    align-items: center;
+
+
+    border-radius: 5px;
+    border: var(--fabric-border-primary) 1px solid;
+    background-color: var(--fabric-background-primary);
 }
 
 .fpsCounter[data-ok="true"] {
@@ -34,4 +39,30 @@
 
 .fpsCounter[data-poor="true"] {
     color: #ff5555;
+}
+
+.dataIndicator, .fpsCounter {
+    width: 100%;
+
+
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+
+    position: relative;
+
+    font-size: .8rem;
+    color: var(--fabric-color-tertiary);
+}
+
+.dataIndicator:not(:last-child)::after, .fpsCounter:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 1px;
+    height: 100%;
+    width: 1px;
+    background-color: var(--fabric-border-secondary);
+
 }

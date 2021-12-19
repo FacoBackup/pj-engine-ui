@@ -3,15 +3,16 @@ import Camera from "./Camera";
 
 export default class Engine {
     meshes = []
-    fieldOfViewAngle = 1.5708 // 90 degrees
+    fieldOfViewAngle = 1.5708 / 2 // 90 degrees
     camera = new Camera(0, 0, 0)
+
     constructor(target) {
         this.ctx = target.getContext('2d')
         this.aspectRatio = 1 // target.height / target.width
 
         this.fieldOfView = 1 / Math.tan(this.fieldOfViewAngle / 2)
 
-        this.zNear = .01
+        this.zNear = .001
         this.zFar = 10000
 
         this.lightSource = new Vector(0, 0, -1)
@@ -25,7 +26,7 @@ export default class Engine {
     }
 
 
-    draw(wireframe, noTexture) {
+    draw(wireframe, noTexture, debug=() => null) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
         this.meshes.forEach(el => {
             el.draw(this.ctx, {
@@ -36,7 +37,7 @@ export default class Engine {
                 zNear: this.zNear,
                 camera: this.camera,
                 lightSource: this.lightSource.matrix,
-            }, wireframe, noTexture)
+            }, wireframe, noTexture, debug)
         })
     }
 }

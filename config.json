@@ -11,5 +11,5 @@
   },
   "fieldOfView": "auto",
   "aspectRation": "auto",
-  "wireframeColor": "red"
+  "wireframeColor": "#0095ff"
 }
