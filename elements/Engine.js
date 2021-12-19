@@ -3,7 +3,7 @@ import Camera from "./Camera";
 
 export default class Engine {
     meshes = []
-    fieldOfViewAngle = 1.5708/2 // 90 degrees
+    fieldOfViewAngle = 1.5708 // 90 degrees
     camera = new Camera(0, 0, 0)
     constructor(target) {
         this.ctx = target.getContext('2d')
@@ -12,7 +12,7 @@ export default class Engine {
         this.fieldOfView = 1 / Math.tan(this.fieldOfViewAngle / 2)
 
         this.zNear = .01
-        this.zFar = 1000
+        this.zFar = 10000
 
         this.lightSource = new Vector(0, 0, -1)
 

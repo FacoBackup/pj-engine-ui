@@ -1,14 +1,11 @@
-import {crossProduct, dotProduct, normalise, subtractVectors} from "./vectorOperations";
+import {crossProduct, dotProduct, normalise, subtractVectors, vectorMultiply} from "./vectorOperations";
 
 export default function multiplyByMatrix(matrixA, matrixB) {
-    // console.log(matrixB.length, matrixA[0].length)
     let aRows = matrixA.length,
         aCols = matrixA[0].length,
-        bRows = matrixB.length,
         bCols = matrixB[0].length,
         newMatrix = new Array(aRows)
 
-    // if (aCols === bRows)
     for (let rowA = 0; rowA < aRows; rowA++) {
         newMatrix[rowA] = new Array(bCols)
         for (let columnB = 0; columnB < bCols; columnB++) {
@@ -39,12 +36,11 @@ export function multiplyByScalar(matrixA, scalar) {
 }
 
 export function matrixPointAt(posVec, targetVec, upVec) {
-
     let newForward = subtractVectors(targetVec, posVec);
 
     newForward = normalise(newForward[0][0], newForward[1][0], newForward[2][0]);
 
-    let a = multiplyByScalar(newForward, dotProduct(upVec, newForward));
+    let a = vectorMultiply(newForward, dotProduct(upVec, newForward));
 
     let newUp = subtractVectors(upVec, a);
     newUp = normalise(newUp[0][0], newUp[1][0], newUp[2][0]);

@@ -1,15 +1,6 @@
 import Vector from "./Vector";
-import {projectToPlane} from "../utils/projection";
-import multiplyByMatrix, {constructMatrix, MatrixMultiplyVector, multiplyByScalar} from "../utils/matrixOperations";
-import rotationMatrix from "../utils/rotationMatrix";
-import {
-    crossProduct,
-    dotProduct,
-    normalise,
-    projectVector,
-    scaleIntoView,
-    subtractVectors, sumVectors
-} from "../utils/vectorOperations";
+import {MatrixMultiplyVector} from "../math/matrixOperations";
+import rotationMatrix from "../math/rotationMatrix";
 
 export default class Triangle {
     vectors = []

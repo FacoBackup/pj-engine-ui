@@ -1,13 +1,13 @@
 import Vector from "./Vector";
 import multiplyByMatrix, {
     constructMatrix,
-    matrixInverse, MatrixMakeTranslation,
+    matrixInverse,
+    MatrixMakeTranslation,
     MatrixMultiplyVector,
-    matrixPointAt,
-    multiplyByScalar
-} from "../utils/matrixOperations";
-import rotationMatrix from "../utils/rotationMatrix";
-import {subtractVectors, sumVectors} from "../utils/vectorOperations";
+    matrixPointAt
+} from "../math/matrixOperations";
+import rotationMatrix from "../math/rotationMatrix";
+import {sumVectors} from "../math/vectorOperations";
 
 export default class Camera {
     vector = new Vector(0, 0, 0) // vCamera
@@ -34,9 +34,9 @@ export default class Camera {
 
         this.forward = forward
         this.fYaw = yaw
-        const matrixCameraRotation = rotationMatrix('y', yaw)
+        const matrixCameraRotation = rotationMatrix('y', this.fYaw)
         const vectorLookDir = MatrixMultiplyVector(matrixCameraRotation, [[0], [0], [1], [1]])
-        const vecUp = new Vector(0, 1, 1)
+        const vecUp = new Vector(0, 1, 0)
         let vectorTarget = sumVectors(this.vector.matrix, vectorLookDir)
 
         this.matrixCamera = matrixPointAt(this.vector.matrix, vectorTarget, vecUp.matrix)

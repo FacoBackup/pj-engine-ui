@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 import Engine from "../elements/Engine";
-import Vector from "../elements/Vector";
 import Triangle from "../elements/Triangle";
 import Mesh from "../elements/Mesh";
 

@@ -1,51 +1,54 @@
 import {useEffect, useState} from "react";
 import Camera from "../elements/Camera";
-
+import keybindings from '../config.json'
 export default function useCameraMovement(target) {
     const [isFocused, setIsFocused] = useState(false)
     const camera = new Camera(0, 0, 0)
 
     const handleClick = (event) => {
 
-        if (target && target.contains(event.target))
+        if (target && target.contains(event.target)) {
+            target.style.cursor = 'none'
             setIsFocused(true)
-        else
+        }
+        else {
+            target.style.cursor = 'default'
             setIsFocused(false)
+        }
     }
 
     const handleKeydown = (event) => {
         if (isFocused)
             switch (event.code) {
-                case 'KeyW': {
+                case keybindings.keybindings.forwards: {
                     camera.update(undefined, undefined, undefined, undefined, camera.forward + 1)
                     break
                 }
-                case 'KeyS': {
+                case keybindings.keybindings.backwards: {
                     camera.update(undefined, undefined, undefined, undefined, camera.forward - 1)
                     break
                 }
-                case 'KeyA': {
-                    camera.update(undefined, undefined, undefined, camera.fYaw - .01)
+                case keybindings.keybindings.rotateLeft: {
+                    camera.update(undefined, undefined, undefined, camera.fYaw - .05)
                     break
                 }
-                case 'KeyD': {
-                    camera.update(undefined, undefined, camera.vector.z, camera.fYaw + .01)
+                case keybindings.keybindings.rotateRight: {
+                    camera.update(undefined, undefined, camera.vector.z, camera.fYaw + .05)
                     break
                 }
-
-                case 'ArrowUp': {
+                case keybindings.keybindings.up: {
                     camera.update(undefined, camera.vector.y + 1, undefined)
                     break
                 }
-                case 'ArrowDown': {
+                case keybindings.keybindings.down: {
                     camera.update(undefined, camera.vector.y - 1, undefined)
                     break
                 }
-                case 'ArrowLeft': {
+                case keybindings.keybindings.left: {
                     camera.update(camera.vector.x - 1, undefined, undefined)
                     break
                 }
-                case 'ArrowRight': {
+                case keybindings.keybindings.right: {
                     camera.update(camera.vector.x + 1, undefined, undefined)
                     break
                 }

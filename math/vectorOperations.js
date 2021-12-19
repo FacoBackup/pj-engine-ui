@@ -15,8 +15,7 @@ export function crossProduct(vecA, vecB) {
 
 export function normalise(x, y, z) {
     const magnitude = Math.sqrt((x ** 2) + (y ** 2) + (z ** 2))
-    // if(isNaN(magnitude))
-    //     console.trace(magnitude, x, y, z)
+
     return [[x / magnitude], [y / magnitude], [z / magnitude], [1]]
 }
 
@@ -87,13 +86,13 @@ export function scaleIntoView(vec, screenWidth, screenHeight) {
 
 export function vectorIntersectPlane(planePoint, planeNormal, lineStart, lineEnd) {
 
-    let planeN = normalise(planeNormal[0][0],planeNormal[1][0],planeNormal[2][0]),
+    let planeN = normalise(planeNormal[0][0], planeNormal[1][0], planeNormal[2][0]),
         planeD = -dotProduct(planeN, planePoint),
         ad = dotProduct(lineStart, planeN),
         bd = dotProduct(lineEnd, planeN),
         t = (-planeD - ad) / (bd - ad),
         lineStartToEnd = subtractVectors(lineEnd, lineStart),
-        lineToIntersect = multiplyByScalar(lineStartToEnd, t)
+        lineToIntersect = vectorMultiply(lineStartToEnd, t)
 
     return sumVectors(lineStart, lineToIntersect)
 }
@@ -101,7 +100,7 @@ export function vectorIntersectPlane(planePoint, planeNormal, lineStart, lineEnd
 
 export function clipAgainstPlane(plane_p, plane_n, in_tri) {
 
-    let planeN = normalise(plane_n[0][0],plane_n[2][0],plane_n[2][0]);
+    let planeN = normalise(plane_n[0][0], plane_n[2][0], plane_n[2][0]);
 
     let vectors = []
     in_tri.vectors.forEach(vec => {
@@ -111,9 +110,7 @@ export function clipAgainstPlane(plane_p, plane_n, in_tri) {
         out_tri2 = new Triangle(vectors[0], vectors[1], vectors[2])
 
     const dist = (p) => {
-        // console.log(p)
-        let n = normalise(p.x,p.y,p.z);
-
+        let n = normalise(p.x, p.y, p.z);
         return (dotProduct(planeN, n) - dotProduct(planeN, plane_p));
     }
 
@@ -144,9 +141,8 @@ export function clipAgainstPlane(plane_p, plane_n, in_tri) {
     if (nInsidePointCount === 0)
         return {quantity: 0, triangles: []}
 
-    if (nInsidePointCount === 3) {
+    if (nInsidePointCount === 3)
         return {quantity: 1, triangles: [out_tri1]}
-    }
 
     if (nInsidePointCount === 1 && nOutsidePointCount === 2) {
         out_tri1.vectors[0] = new Vector(inside_points[0][0][0], inside_points[0][1][0], inside_points[0][2][0])
@@ -171,4 +167,13 @@ export function clipAgainstPlane(plane_p, plane_n, in_tri) {
 
         return {quantity: 2, triangles: [out_tri1, out_tri2]}
     }
+}
+
+export function vectorMultiply(vecA, scalar) {
+    let aX = vecA[0][0],
+        aY = vecA[1][0],
+        aZ = vecA[2][0]
+
+
+    return [[aX * scalar], [aY * scalar], [aZ * scalar], [1]]
 }

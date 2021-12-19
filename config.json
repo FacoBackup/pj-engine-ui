@@ -1,0 +1,14 @@
+{
+  "keybindings": {
+    "rotateLeft": "KeyA",
+    "rotateRight": "KeyD",
+    "forwards": "KeyW",
+    "backwards": "KeyS",
+    "left": "ArrowLeft",
+    "right": "ArrowRight",
+    "up": "ArrowUp",
+    "down": "ArrowDown"
+  },
+  "fieldOfView": "auto",
+  "aspectRation": "auto"
+}
