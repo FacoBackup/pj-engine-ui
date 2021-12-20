@@ -7,14 +7,15 @@ import multiplyByMatrix, {
     matrixPointAt
 } from "../math/matrixOperations";
 import rotationMatrix from "../math/rotationMatrix";
-import {sumVectors} from "../math/vectorOperations";
+import {subtractVectors, sumVectors} from "../math/vectorOperations";
 
 export default class Camera {
     vector = new Vector(0, 0, 0) // vCamera
     matrixCamera = constructMatrix(4, 4, 0)
     viewMatrix = constructMatrix(4, 4, 0)
     fYaw = 0
-    forward = 0
+    fPitch = -Math.PI/2
+
     worldMatrix = constructMatrix(4, 4, 0)
     translatedMatrix = MatrixMakeTranslation(0, 0, 50)
 
@@ -29,15 +30,23 @@ export default class Camera {
         this.update(originX, originY, originZ)
     }
 
-    update(x = this.vector.x, y = this.vector.y, z = this.vector.z, yaw = this.fYaw, forward = this.forward) {
-        this.vector.update(x, y, forward)
+    update(x = this.vector.x, y = this.vector.y, z = this.vector.z, yaw = this.fYaw,  pitch = this.fPitch) {
+        this.vector.update(x, y, z)
 
-        this.forward = forward
         this.fYaw = yaw
-        const vectorLookDir = MatrixMultiplyVector(rotationMatrix('y', this.fYaw), [[0], [0], [1], [1]])
+        this.fPitch = pitch
+
+        let vectorPitch = MatrixMultiplyVector(rotationMatrix('z', this.fPitch), [[0], [1], [0], [1]])
+
+        vectorPitch[0][0] = 0
+        vectorPitch = sumVectors(this.vector.matrix, vectorPitch)
+
+        let vectorYaw = MatrixMultiplyVector(rotationMatrix('y', this.fYaw), [[0], [0], [1], [1]])
+
+        vectorYaw = sumVectors(this.vector.matrix, vectorYaw)
 
 
-        this.matrixCamera = matrixPointAt(this.vector.matrix, sumVectors(this.vector.matrix, vectorLookDir), [[0], [1], [0], [1]])
+        this.matrixCamera = matrixPointAt(vectorPitch, vectorYaw, [[0], [1], [0], [1]])
         this.viewMatrix = matrixInverse(this.matrixCamera)
     }
 }

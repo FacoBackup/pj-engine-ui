@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
-import useMesh from "../hooks/useMesh";
+import useEngine from "../hooks/useEngine";
 import useCameraMovement from "../hooks/useCameraMovement";
 import styles from '../styles/Canvas.module.css'
 
@@ -17,15 +17,17 @@ export default function Viewport(props) {
         setWidth(target.current.parentNode.offsetWidth)
         setHeight(target.current.parentNode.offsetHeight)
     }
-    const camera = useCameraMovement(target.current?.parentNode, props.enabledDebug)
-    const engine = useMesh(props.meshes, target.current)
+
+    const engine = useEngine(props.meshes, target.current)
+    const camera = useCameraMovement(target.current?.parentNode, props.enabledDebug, engine)
+
     const profiler = useOptions()
     useEffect(() => {
 
         resizeObs = new ResizeObserver(callback)
         resizeObs.observe(target.current.parentNode)
     }, [])
-    const ref = useRef()
+
     let executing = false
     const [rotations, setRotations] = useState({
         x: false,
@@ -36,6 +38,7 @@ export default function Viewport(props) {
 
     useEffect(() => {
         if (engine && !executing) {
+
             engine.camera = camera
             executing = true
             if (props.enabledDebug)
@@ -55,7 +58,7 @@ export default function Viewport(props) {
                 cancelAnimationFrame(engine.currentFrame)
             executing = false
         }
-    }, [engine, camera, rotations])
+    }, [engine,  rotations])
 
     return (
         <>
@@ -63,9 +66,9 @@ export default function Viewport(props) {
             {props.enabledDebug ? <Navigation rotations={rotations} setRotations={setRotations}/> : null}
             <canvas
                 width={width}
-                    height={height}
-                    ref={target}
-                    className={styles.viewport}
+                height={height}
+                ref={target}
+                className={styles.viewport}
             />
         </>
     )

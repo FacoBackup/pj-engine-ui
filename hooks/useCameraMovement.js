@@ -2,57 +2,88 @@ import {useEffect, useState} from "react";
 import Camera from "../core/elements/Camera";
 import conf from '../config.json'
 
-export default function useCameraMovement(target, debugEnabled) {
+export default function useCameraMovement(target, debugEnabled, engine) {
     const [isFocused, setIsFocused] = useState(false)
     const camera = new Camera(0, 0, 0)
+    let lastMousePosition = {x: 0, y: 0}
 
-    const handleClick = (event) => {
+    const handleMouseDown = (event) => {
 
         if (target && target.contains(event.target)) {
-            if(!debugEnabled)
+            if (!debugEnabled)
                 target.style.cursor = 'none'
             setIsFocused(true)
-        }
-        else {
-            if(!debugEnabled)
+        } else {
+            if (!debugEnabled)
                 target.style.cursor = 'default'
             setIsFocused(false)
         }
     }
 
+    const handleMouseUp = () => {
+        setIsFocused(false)
+    }
+
+    const handleMouseMove = (event) => {
+        if (isFocused) {
+
+            let pitch, yaw
+            if (event.clientY - lastMousePosition.y < 0)
+                pitch = engine.camera.fPitch - (conf.sensitivity.pitch ? conf.sensitivity.pitch : .005)
+            else if (event.clientY - lastMousePosition.y > 0)
+                pitch = engine.camera.fPitch + (conf.sensitivity.pitch ? conf.sensitivity.pitch : .005)
+
+            if (event.clientX - lastMousePosition.x < 0)
+                yaw = engine.camera.fYaw - (conf.sensitivity.yaw ? conf.sensitivity.yaw : .005)
+            else if (event.clientX - lastMousePosition.x > 0)
+                yaw = engine.camera.fYaw + (conf.sensitivity.yaw ? conf.sensitivity.yaw : .005)
+
+
+            engine.camera.update(
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                pitch
+            )
+
+
+            engine.camera.update(
+                undefined,
+                undefined,
+                undefined,
+                yaw)
+
+            lastMousePosition = {x: event.clientX, y: event.clientY}
+        }
+
+    }
     const handleKeydown = (event) => {
         if (isFocused)
             switch (event.code) {
                 case conf.keybindings.forwards: {
-                    camera.update(undefined, undefined, undefined, undefined, camera.forward + (conf.sensitivity.forwards ? conf.sensitivity.forwards : .1))
+                    engine.camera.update(undefined, undefined, engine.camera.vector.z + (conf.sensitivity.forwards ? conf.sensitivity.forwards : .1))
                     break
                 }
                 case conf.keybindings.backwards: {
-                    camera.update(undefined, undefined, undefined, undefined, camera.forward - (conf.sensitivity.backwards ? conf.sensitivity.backwards : .1))
+                    engine.camera.update(undefined, undefined, engine.camera.vector.z - (conf.sensitivity.backwards ? conf.sensitivity.backwards : .1))
                     break
                 }
-                case conf.keybindings.rotateLeft: {
-                    camera.update(undefined, undefined, undefined, camera.fYaw - ( conf.sensitivity.rotationLeft ? conf.sensitivity.rotationLeft : .05))
-                    break
-                }
-                case conf.keybindings.rotateRight: {
-                    camera.update(undefined, undefined, undefined, camera.fYaw + (conf.sensitivity.rotationRight ? conf.sensitivity.rotationRight : .05))
-                    break
-                }
+
                 case conf.keybindings.up: {
-                    camera.update(undefined, camera.vector.y + (conf.sensitivity.up ? conf.sensitivity.up : 1), undefined)
+                    engine.camera.update(undefined, engine.camera.vector.y + (conf.sensitivity.up ? conf.sensitivity.up : 1), undefined)
                     break
                 }
                 case conf.keybindings.down: {
-                    camera.update(undefined, camera.vector.y - (conf.sensitivity.down ? conf.sensitivity.down : 1), undefined)
+                    engine.camera.update(undefined, engine.camera.vector.y - (conf.sensitivity.down ? conf.sensitivity.down : 1), undefined)
                     break
                 }
                 case conf.keybindings.left: {
-                    camera.update(camera.vector.x - (conf.sensitivity.left ? conf.sensitivity.left : 1), undefined, undefined)
+                    engine.camera.update(engine.camera.vector.x + (conf.sensitivity.left ? conf.sensitivity.left : 1), undefined, undefined)
                     break
                 }
                 case conf.keybindings.right: {
-                    camera.update(camera.vector.x + (conf.sensitivity.right ? conf.sensitivity.right : 1), undefined, undefined)
+                    engine.camera.update(engine.camera.vector.x - (conf.sensitivity.right ? conf.sensitivity.right : 1), undefined, undefined)
                     break
                 }
                 default:
@@ -61,16 +92,28 @@ export default function useCameraMovement(target, debugEnabled) {
     }
 
     useEffect(() => {
-        document.addEventListener('click', handleClick)
+        if (engine && engine.camera === undefined) {
+            console.log('HERE')
+            engine.camera = camera
+        }
+    }, [engine])
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleMouseDown)
+        document.addEventListener('mouseup', handleMouseUp)
         return () => {
-            document.removeEventListener('click', handleClick)
+            document.removeEventListener('mousedown', handleMouseDown)
+            document.removeEventListener('mouseup', handleMouseUp)
         }
     }, [target])
 
     useEffect(() => {
+
+        document.addEventListener('mousemove', handleMouseMove)
         document.addEventListener('keydown', handleKeydown)
         return () => {
-            document.addEventListener('keydown', handleKeydown)
+            document.removeEventListener('keydown', handleKeydown)
+            document.removeEventListener('mousemove', handleMouseMove)
         }
     }, [isFocused, target])
 

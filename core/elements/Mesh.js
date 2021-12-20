@@ -59,12 +59,12 @@ export default class Mesh {
             let crossP = crossProduct(normalA, normalB)
             crossP = normalise(crossP[0][0], crossP[1][0], crossP[2][0])
 
-            const vCameraRay = subtractVectors(vecA, camera.vector.matrix)
+            const vCameraRay = subtractVectors(vecInit, camera.vector.matrix)
             const dotProd = dotProduct(crossP, vCameraRay)
 
             if (dotProd < 0) {
                 const normalisedLightVec = normalise(lightSource[0][0], lightSource[1][0], lightSource[2][0])
-                const dotProdLightVec = dotProduct(crossP, normalisedLightVec)
+                const dotProdLightVec = Math.max(.1, dotProduct(crossP, normalisedLightVec))
 
                 vecInit = MatrixMultiplyVector(camera.viewMatrix, vecInit)
                 vecA = MatrixMultiplyVector(camera.viewMatrix, vecA)

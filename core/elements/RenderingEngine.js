@@ -5,7 +5,7 @@ import profiler from "../helpers/profiler";
 export default class RenderingEngine {
     meshes = []
     fieldOfViewAngle = 1.5708 / 2 // 90 degrees
-    camera = new Camera(0, 0, 0)
+    camera = undefined
     currentFrame = 0
 
     constructor(target) {

@@ -1,11 +1,9 @@
 {
   "keybindings": {
-    "rotateLeft": "KeyA",
-    "rotateRight": "KeyD",
     "forwards": "KeyW",
     "backwards": "KeyS",
-    "left": "ArrowLeft",
-    "right": "ArrowRight",
+    "left": "KeyA",
+    "right": "KeyD",
     "up": "ArrowUp",
     "down": "ArrowDown"
   },
@@ -14,10 +12,10 @@
     "down": 1,
     "left": 1,
     "right": 1,
-    "forwards": 0.1,
-    "backwards": 0.1,
-    "rotationLeft": 0.05,
-    "rotationRight": 0.05
+    "forwards": 1,
+    "backwards": 1,
+    "yaw": 0.005,
+    "pitch": 0.005
   },
   "fieldOfView": "auto",
   "aspectRation": "auto",
