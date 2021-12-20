@@ -12,8 +12,8 @@ export default function useMesh(files, target, width, height) {
             setEngine(new RenderingEngine(target))
     }, [width, height, target])
 
-    useEffect(() => {
 
+    useEffect(() => {
         if (engine && data && meshes.length === 0) {
             data.forEach(d => {
                 const split = d.split('\n')
@@ -45,13 +45,17 @@ export default function useMesh(files, target, width, height) {
         }
     }, [data, engine, meshes])
     useEffect(() => {
+        if (engine)
+            engine.meshes = []
+        setData([])
+        setMeshes([])
         files.forEach(m => {
             fetch(m).then(res => res.text().then(text => setData(prevState => {
                 return [...prevState, text]
             })).catch()).catch()
         })
 
-    }, [])
+    }, [files])
 
     return engine
 }

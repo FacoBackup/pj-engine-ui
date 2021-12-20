@@ -59,7 +59,6 @@ export default function Viewport(props) {
 
     return (
         <>
-            {/*<div ref={ref} className={styles.perfMetric}/>*/}
             {props.enabledDebug ? <Options {...profiler}/> : null}
             {props.enabledDebug ? <Navigation rotations={rotations} setRotations={setRotations}/> : null}
             <canvas

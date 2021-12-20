@@ -9,6 +9,8 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    box-shadow: var(--fabric-box-shadow-primary) 0 0 2px 1px ;
+    border-radius: 12px;
 }
 
 .perfMetric {
@@ -67,7 +69,8 @@
 }
 
 .viewport {
+
     background-color: var(--fabric-background-tertiary);
-    border-radius: 8px;
+    border-radius: 0 12px 12px;
     border: var(--fabric-border-primary) 1px solid;
 }
