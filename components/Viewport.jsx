@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import useMesh from "../hooks/useMesh";
 import useCameraMovement from "../hooks/useCameraMovement";
 import styles from '../styles/Canvas.module.css'
-import {debugRunner, runner} from "../core/helpers/runner";
+
 import Options from "./Options";
 import useOptions from "../hooks/useOptions";
 import Navigation from "./Navigation";
@@ -27,41 +27,53 @@ export default function Viewport(props) {
     }, [])
     const ref = useRef()
     let executing = false
+    const [rotations, setRotations] = useState({
+        x: false,
+        y: false,
+        z: false,
+        angle: 0.01
+    })
 
     useEffect(() => {
         if (engine && !executing) {
             engine.camera = camera
             executing = true
             if (props.enabledDebug)
-                debugRunner({
-                    shading: profiler.shading,
-                    texturing: profiler.texturing,
-                    targetRef: ref.current,
-                    engine: engine,
-                    wireframeMode: profiler.wireframeMode,
-                    rotation: props.rotation,
-                    vertex: profiler.vertexVisible
-                })
+                engine.executeDebug(
+                    profiler.shading,
+                    profiler.wireframeMode,
+                    profiler.texturing,
+                    rotations,
+                    profiler.vertexVisible
+                )
             else
-                runner(engine)
+                engine.executeProd()
         }
-    }, [engine, camera])
+
+        return () => {
+            if (engine)
+                cancelAnimationFrame(engine.currentFrame)
+            executing = false
+        }
+    }, [engine, camera, rotations])
 
     return (
         <>
-            <div ref={ref} className={styles.perfMetric}/>
+            {/*<div ref={ref} className={styles.perfMetric}/>*/}
             {props.enabledDebug ? <Options {...profiler}/> : null}
-            {props.enabledDebug ? <Navigation {...profiler}/> : null}
-            <canvas width={width} height={height} ref={target} className={styles.viewport}/>
+            {props.enabledDebug ? <Navigation rotations={rotations} setRotations={setRotations}/> : null}
+            <canvas
+                width={width}
+                    height={height}
+                    ref={target}
+                    className={styles.viewport}
+            />
         </>
     )
 }
 
 Viewport.propTypes = {
     meshes: PropTypes.arrayOf(PropTypes.string),
-    rotation: PropTypes.shape({
-        rotationAxis: PropTypes.arrayOf(PropTypes.oneOf(['y', 'x', 'z'])),
-        radiansAngle: PropTypes.number
-    }),
+
     enabledDebug: PropTypes.bool
 }

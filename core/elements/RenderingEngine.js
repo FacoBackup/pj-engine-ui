@@ -1,10 +1,12 @@
 import Vector from "./Vector";
 import Camera from "./Camera";
+import profiler from "../helpers/profiler";
 
 export default class RenderingEngine {
     meshes = []
     fieldOfViewAngle = 1.5708 / 2 // 90 degrees
     camera = new Camera(0, 0, 0)
+    currentFrame = 0
 
     constructor(target) {
         this.ctx = target.getContext('2d')
@@ -25,6 +27,47 @@ export default class RenderingEngine {
         this.zOffset = ((-this.zFar * this.zNear) / (this.zFar - this.zNear))
     }
 
+    executeDebug(
+        shading,
+        wireframeMode,
+        texturing,
+        rotations,
+        vertex
+    ) {
+        let times = [], fps, performanceMetrics = {}
+
+        const execDebug = (t) => {
+            let start = performance.now()
+            if (rotations.x || rotations.y || rotations.z) {
+                this.meshes.forEach(el => {
+                    if (rotations.x)
+                        el.rotate('x', rotations.angle)
+                    if (rotations.y)
+                        el.rotate('y', rotations.angle)
+                    if (rotations.z)
+                        el.rotate('z', rotations.angle)
+                })
+            }
+            this.draw(wireframeMode, texturing, shading, vertex, perf => performanceMetrics = perf)
+
+            while (times.length > 0 && times[0] <= start - 1000) {
+                times.shift();
+            }
+            times.push(start);
+            fps = times.length;
+            this.currentFrame = requestAnimationFrame(execDebug);
+        }
+
+        this.currentFrame = requestAnimationFrame(execDebug);
+    }
+
+    executeProd() {
+        const exec = (t) => {
+            this.draw()
+            this.currentFrame = requestAnimationFrame(exec);
+        }
+        this.currentFrame = requestAnimationFrame(exec);
+    }
 
     draw(wireframe, texturing, shading, vertex, callback = () => null) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height)
@@ -37,7 +80,7 @@ export default class RenderingEngine {
                 zNear: this.zNear,
                 camera: this.camera,
                 lightSource: this.lightSource.matrix
-            }, wireframe, texturing, shading,vertex, callback)
+            }, wireframe, texturing, shading, vertex, callback)
         })
     }
 }

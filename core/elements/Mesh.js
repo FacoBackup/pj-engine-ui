@@ -71,7 +71,7 @@ export default class Mesh {
                 vecB = MatrixMultiplyVector(camera.viewMatrix, vecB)
 
                 let newTri = new Triangle([vecInit[0][0], vecInit[1][0], vecInit[2][0]], [vecA[0][0], vecA[1][0], vecA[2][0]], [vecB[0][0], vecB[1][0], vecB[2][0]])
-                newTri.color = `hsl(0, 10%, ${shading ? (dotProdLightVec < .3 ? 30 : (Math.abs(dotProdLightVec).toFixed(2) * 50)) : 50}%)`
+                newTri.color = `hsl(0, 10%, ${shading ? ((Math.abs(dotProdLightVec).toFixed(2) * 50)) : 50}%)`
 
                 const clipped = clipAgainstPlane([[0], [0], [zNear], [0]], [[0], [0], [1], [0]], newTri)
                 for (let currentClipped = 0; currentClipped < clipped.quantity; currentClipped++) {
