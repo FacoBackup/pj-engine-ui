@@ -7,6 +7,7 @@ export default function useMesh(files, target, width, height) {
     const [engine, setEngine] = useState()
     const [data, setData] = useState([])
     const [meshes, setMeshes] = useState([])
+    
     useEffect(() => {
         if (target)
             setEngine(new RenderingEngine(target))
@@ -44,6 +45,7 @@ export default function useMesh(files, target, width, height) {
 
         }
     }, [data, engine, meshes])
+
     useEffect(() => {
         if (engine)
             engine.meshes = []
@@ -55,7 +57,7 @@ export default function useMesh(files, target, width, height) {
             })).catch()).catch()
         })
 
-    }, [files])
+    }, [files, engine])
 
     return engine
 }
