@@ -6,6 +6,7 @@ import styles from '../styles/Canvas.module.css'
 import {debugRunner, runner} from "../core/helpers/runner";
 import Options from "./Options";
 import useOptions from "../hooks/useOptions";
+import Navigation from "./Navigation";
 
 export default function Viewport(props) {
     const [width, setWidth] = useState(500)
@@ -50,6 +51,7 @@ export default function Viewport(props) {
         <>
             <div ref={ref} className={styles.perfMetric}/>
             {props.enabledDebug ? <Options {...profiler}/> : null}
+            {props.enabledDebug ? <Navigation {...profiler}/> : null}
             <canvas width={width} height={height} ref={target} className={styles.viewport}/>
         </>
     )

@@ -1,10 +1,10 @@
-import styles from '../styles/Options.module.css'
+import styles from '../styles/Navigation.module.css'
 
 import {ToolTip, Button} from "@f-ui/core";
 import PropTypes from "prop-types";
 import {useState} from "react";
 
-export default function Options(props) {
+export default function Navigation(props) {
     const [hidden, setHidden] = useState(false)
     return (
         <div className={styles.wrapper} style={{right: hidden ? '-35px' : undefined}}>
@@ -69,7 +69,7 @@ export default function Options(props) {
     )
 }
 
-Options.propTypes = {
+Navigation.propTypes = {
     wireframeMode: PropTypes.func,
     setWireframeMode: PropTypes.func,
     vertexVisible: PropTypes.func,

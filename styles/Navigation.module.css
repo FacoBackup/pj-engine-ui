@@ -1,0 +1,36 @@
+.wrapper {
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    transform: translateY(-50%);
+    height: fit-content;
+
+    border-radius: 5px;
+
+    background-color: rgba(0, 0, 0, .7);
+    width: 35px;
+    display: grid;
+
+    align-items: flex-start;
+    min-height: 10vh;
+    transition: 150ms linear;
+}
+
+.divider {
+    margin: auto;
+    width: 75%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, .7);
+
+
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    color: white;
+    padding: 8px 0;
+}
