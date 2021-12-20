@@ -1,6 +1,6 @@
 import styles from '../styles/Options.module.css'
 import Button from "../../core/inputs/button/Button";
-import {ToolTip} from "mfc-core";
+import {ToolTip} from "@f-ui/core";
 import PropTypes from "prop-types";
 import {useState} from "react";
 

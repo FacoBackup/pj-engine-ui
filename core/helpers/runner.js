@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-import styles from '../../styles/Canvas.module.css'
 import profiler from "./profiler";
 
 export function debugRunner({

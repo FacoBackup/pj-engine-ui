@@ -1,7 +1,6 @@
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useMemo, useState} from "react";
 import PropTypes from "prop-types";
 import styles from './styles/Canvas.module.css'
-import useMesh from "./hooks/useMesh";
 import Viewport from "./components/Viewport";
 
 export default function Engine(props) {
