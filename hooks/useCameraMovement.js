@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import Camera from "../core/elements/Camera";
 import conf from '../config.json'
 
 export default function useCameraMovement(target, debugEnabled, engine) {

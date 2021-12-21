@@ -7,10 +7,7 @@ import styles from '../styles/Canvas.module.css'
 import Options from "./Options";
 import useOptions from "../hooks/useOptions";
 import Navigation from "./Navigation";
-import Triangle from "../core/elements/Triangle";
 import Grid from "../core/elements/Grid";
-import Mesh from "../core/elements/Mesh";
-import Controls from "./Controls";
 
 export default function Viewport(props) {
     const [width, setWidth] = useState(500)
