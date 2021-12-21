@@ -2,6 +2,7 @@ import {useMemo, useState} from "react";
 import PropTypes from "prop-types";
 import styles from './styles/Canvas.module.css'
 import Viewport from "./components/Viewport";
+import Controls from "./components/Controls";
 
 export default function Engine(props) {
     const [tab, setTab] = useState(0)
@@ -20,6 +21,7 @@ export default function Engine(props) {
     return (
         <div className={styles.wrapper}>
             <Viewport {...props} id={id}/>
+            {/*<Controls/>*/}
         </div>
     )
 }

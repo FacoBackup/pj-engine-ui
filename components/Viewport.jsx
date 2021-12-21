@@ -7,6 +7,10 @@ import styles from '../styles/Canvas.module.css'
 import Options from "./Options";
 import useOptions from "../hooks/useOptions";
 import Navigation from "./Navigation";
+import Triangle from "../core/elements/Triangle";
+import Grid from "../core/elements/Grid";
+import Mesh from "../core/elements/Mesh";
+import Controls from "./Controls";
 
 export default function Viewport(props) {
     const [width, setWidth] = useState(500)
@@ -19,7 +23,7 @@ export default function Viewport(props) {
     }
 
     const engine = useEngine(props.meshes, target.current)
-    const camera = useCameraMovement(target.current?.parentNode, props.enabledDebug, engine)
+    useCameraMovement(target.current?.parentNode, props.enabledDebug, engine)
 
     const profiler = useOptions()
     useEffect(() => {
@@ -35,11 +39,15 @@ export default function Viewport(props) {
         z: false,
         angle: 0.01
     })
+    // const grid = (new Grid())
 
     useEffect(() => {
         if (engine && !executing) {
+            // if (grid.triangles.length === 0) {
+            //     grid.computeVertexes()
+            //     engine.meshes.push(new Mesh(grid.triangles))
+            // }
 
-            engine.camera = camera
             executing = true
             if (props.enabledDebug)
                 engine.executeDebug(
@@ -58,10 +66,11 @@ export default function Viewport(props) {
                 cancelAnimationFrame(engine.currentFrame)
             executing = false
         }
-    }, [engine,  rotations])
+    }, [engine, rotations, profiler])
 
     return (
         <>
+
             {props.enabledDebug ? <Options {...profiler}/> : null}
             {props.enabledDebug ? <Navigation rotations={rotations} setRotations={setRotations}/> : null}
             <canvas

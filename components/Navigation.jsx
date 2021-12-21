@@ -1,6 +1,6 @@
 import styles from '../styles/Navigation.module.css'
 
-import {ToolTip, Button} from "@f-ui/core";
+import {Button, ToolTip} from "@f-ui/core";
 import PropTypes from "prop-types";
 
 export default function Navigation(props) {

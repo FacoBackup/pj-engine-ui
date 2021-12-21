@@ -1,6 +1,4 @@
 import Vector from "./Vector";
-import Camera from "./Camera";
-import profiler from "../helpers/profiler";
 
 export default class RenderingEngine {
     meshes = []

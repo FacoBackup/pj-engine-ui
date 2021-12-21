@@ -7,7 +7,8 @@ export default class Triangle {
     vectors = []
     color = 'rgba(0,0,0,0)'
 
-    constructor(vecA, vecB, vecC) {
+    constructor(vecA, vecB, vecC, noColor=false) {
+        this.noColor = noColor
         this.vectors.push(new Vector(...vecA))
         this.vectors.push(new Vector(...vecB))
         this.vectors.push(new Vector(...vecC))
@@ -33,11 +34,11 @@ export default class Triangle {
             else
                 ctx.lineTo(vec.x, vec.y)
         })
-        if (texturing) {
+        if (texturing && !this.noColor) {
             ctx.fillStyle = this.color
             ctx.fill()
         }
-        if (wireframe)
+        if (wireframe || this.noColor)
             ctx.strokeStyle = conf.wireframeColor ? conf.wireframeColor : 'green'
         else
             ctx.strokeStyle = this.color

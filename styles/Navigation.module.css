@@ -1,8 +1,8 @@
 .wrapper {
     position: absolute;
-    top: 50%;
+    top: 8px;
     left: 8px;
-    transform: translateY(-50%);
+
     height: fit-content;
 
     border-radius: 5px;

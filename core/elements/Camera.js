@@ -7,7 +7,7 @@ import multiplyByMatrix, {
     matrixPointAt
 } from "../math/matrixOperations";
 import rotationMatrix from "../math/rotationMatrix";
-import {subtractVectors, sumVectors} from "../math/vectorOperations";
+import {sumVectors} from "../math/vectorOperations";
 
 export default class Camera {
     vector = new Vector(0, 0, 0) // vCamera

@@ -19,21 +19,6 @@ export default function multiplyByMatrix(matrixA, matrixB) {
     return newMatrix
 }
 
-export function multiplyByScalar(matrixA, scalar) {
-
-    let aRows = matrixA.length,
-        aCols = matrixA[0].length,
-        newMatrix = [...matrixA]
-
-    for (let rowA = 0; rowA < aRows; rowA++) {
-        for (let columnA = 0; columnA < aCols; columnA++) {
-            newMatrix[rowA][columnA] *= scalar
-        }
-    }
-
-    return newMatrix
-
-}
 
 export function matrixPointAt(posVec, targetVec, upVec) {
     let newForward = subtractVectors(targetVec, posVec);

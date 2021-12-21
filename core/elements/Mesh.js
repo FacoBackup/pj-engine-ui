@@ -1,15 +1,5 @@
-import {MatrixMultiplyVector} from "../math/matrixOperations";
-import {
-    clipAgainstPlane,
-    crossProduct,
-    dotProduct,
-    normalise,
-    projectVector,
-    scaleIntoView,
-    subtractVectors
-} from "../math/vectorOperations";
-import Triangle from "./Triangle";
-import Vector from "./Vector";
+import trianglesToRaster from "../helpers/trianglesToRaster";
+import {clipAgainstPlane} from "../helpers/clippingHandler";
 
 export default class Mesh {
     triangles = []
@@ -26,65 +16,7 @@ export default class Mesh {
         })
     }
 
-    _adjustTriangle(worldMatrix, viewMatrix, tri, dotProdLightVec, fieldOfView, aspectRatio, zScale, zOffset, canvasWidth, canvasHeight) {
-        let updatedA = scaleIntoView(projectVector(tri.vectors[0].matrix, fieldOfView, aspectRatio, zScale, zOffset), canvasWidth, canvasHeight),
-            updatedB = scaleIntoView(projectVector(tri.vectors[1].matrix, fieldOfView, aspectRatio, zScale, zOffset), canvasWidth, canvasHeight),
-            updatedC = scaleIntoView(projectVector(tri.vectors[2].matrix, fieldOfView, aspectRatio, zScale, zOffset), canvasWidth, canvasHeight)
-        tri.vectors[0] = new Vector(updatedA[0][0], updatedA[1][0], updatedA[2][0])
-        tri.vectors[1] = new Vector(updatedB[0][0], updatedB[1][0], updatedB[2][0])
-        tri.vectors[2] = new Vector(updatedC[0][0], updatedC[1][0], updatedC[2][0])
-        return tri
-    }
-
-    _getTrianglesToRaster({
-                              camera,
-                              lightSource,
-                              zNear,
-                              fieldOfView,
-                              aspectRatio,
-                              zScale,
-                              zOffset
-                          }, canvasWidth, canvasHeight, shading) {
-        let response = []
-        for (let current = 0; current < this.triangles.length; current++) {
-
-            let vecInit = MatrixMultiplyVector(camera.worldMatrix, this.triangles[current].vectors[0].matrix),
-                vecA = MatrixMultiplyVector(camera.worldMatrix, this.triangles[current].vectors[1].matrix),
-                vecB = MatrixMultiplyVector(camera.worldMatrix, this.triangles[current].vectors[2].matrix)
-
-            let normalA, normalB
-            normalA = subtractVectors(vecA, vecInit)
-            normalB = subtractVectors(vecB, vecInit)
-
-            let crossP = crossProduct(normalA, normalB)
-            crossP = normalise(crossP[0][0], crossP[1][0], crossP[2][0])
-
-            const vCameraRay = subtractVectors(vecInit, camera.vector.matrix)
-            const dotProd = dotProduct(crossP, vCameraRay)
-
-            if (dotProd < 0) {
-                const normalisedLightVec = normalise(lightSource[0][0], lightSource[1][0], lightSource[2][0])
-                const dotProdLightVec = Math.max(.1, dotProduct(crossP, normalisedLightVec))
-
-                vecInit = MatrixMultiplyVector(camera.viewMatrix, vecInit)
-                vecA = MatrixMultiplyVector(camera.viewMatrix, vecA)
-                vecB = MatrixMultiplyVector(camera.viewMatrix, vecB)
-
-                let newTri = new Triangle([vecInit[0][0], vecInit[1][0], vecInit[2][0]], [vecA[0][0], vecA[1][0], vecA[2][0]], [vecB[0][0], vecB[1][0], vecB[2][0]])
-                newTri.color = `hsl(0, 10%, ${shading ? ((Math.abs(dotProdLightVec).toFixed(2) * 50)) : 50}%)`
-
-                const clipped = clipAgainstPlane([[0], [0], [zNear], [0]], [[0], [0], [1], [0]], newTri)
-                for (let currentClipped = 0; currentClipped < clipped.quantity; currentClipped++) {
-                    response.push(this._adjustTriangle(camera.worldMatrix, camera.viewMatrix, clipped.triangles[currentClipped], dotProdLightVec, fieldOfView, aspectRatio, zScale, zOffset, canvasWidth, canvasHeight))
-                }
-            }
-        }
-
-        return response
-    }
-
-    draw(ctx, engineAttrs, wireframe, texturing, shading,vertex, callback) {
-
+    draw(ctx, engineAttrs, wireframe, texturing, shading, vertex, callback) {
         const sortTriangles = (triangleA, triangleB) => {
             let z1 = Math.abs(triangleA.vectors[0].z + triangleA.vectors[1].z + triangleA.vectors[2].z) / 3
             let z2 = Math.abs((triangleB.vectors[0].z + triangleB.vectors[1].z + triangleB.vectors[2].z)) / 3
@@ -98,15 +30,13 @@ export default class Mesh {
             return 0;
         }
 
-
         const startTriangleMapping = performance.now()
-        let toRaster = this._getTrianglesToRaster(engineAttrs, ctx.canvas.width, ctx.canvas.height, shading)
+        let toRaster = trianglesToRaster(engineAttrs, ctx.canvas.width, ctx.canvas.height, shading, this.triangles)
         const endTriangleMapping = performance.now()
 
         const startSort = performance.now()
         toRaster = toRaster.sort(sortTriangles)
         const endSort = performance.now()
-
 
         let pInt = 0, startDrawing = 0, endDrawing = 0, startClipping = 0, endClipping = 0
         for (let current = 0; current < toRaster.length; current++) {
@@ -167,13 +97,13 @@ export default class Mesh {
             endClipping = performance.now()
             startDrawing = performance.now()
             listTriangles.forEach(tri => {
-                tri.draw(ctx, wireframe, texturing,vertex)
+                tri.draw(ctx, wireframe, texturing, vertex)
             })
             endDrawing = performance.now()
         }
 
         callback({
-            drawing:endDrawing - startDrawing,
+            drawing: endDrawing - startDrawing,
             sort: endSort - startSort,
             mapping: endTriangleMapping - startTriangleMapping,
             clipping: endClipping - startClipping

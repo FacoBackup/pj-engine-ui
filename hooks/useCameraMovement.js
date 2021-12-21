@@ -92,10 +92,9 @@ export default function useCameraMovement(target, debugEnabled, engine) {
     }
 
     useEffect(() => {
-        if (engine && engine.camera === undefined) {
-            console.log('HERE')
+        if (engine && engine.camera === undefined)
             engine.camera = camera
-        }
+
     }, [engine])
 
     useEffect(() => {
@@ -117,5 +116,4 @@ export default function useCameraMovement(target, debugEnabled, engine) {
         }
     }, [isFocused, target])
 
-    return camera
 }

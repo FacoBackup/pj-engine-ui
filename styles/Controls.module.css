@@ -1,0 +1,11 @@
+.wrapper {
+    background-color: rgba(0, 0, 0, .7);
+    width: 100%;
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-start;
+    height: 35px;
+    transition: 150ms linear;
+}
+
