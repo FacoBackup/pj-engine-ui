@@ -27,7 +27,7 @@ Motor gráfico escrito em javascript **"from scratch"**.
 
 | Status | Implementação                             | Razão                        | Prioridade |
 |--------|-------------------------------------------|------------------------------|------------|
-| [ ]    | Index buffer                              | Performance                  | Alta       |
+| [x]    | Index buffer                              | Performance                  | Alta       |
 | [ ]    | Vertex buffer                             | Performance                  | Alta       |
 | [ ]    | Suporte a multi-thread                    | Performance                  | Alta       |
 | [ ]    | Suporte a processamento de shaders na GPU | Performance / escalabilidade | Alta       |

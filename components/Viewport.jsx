@@ -34,7 +34,7 @@ export default function Viewport(props) {
 
     let executing = false
     const [rotations, setRotations] = useState({
-        x: false,
+        x: true,
         y: false,
         z: false,
         angle: 0.01
