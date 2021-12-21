@@ -4,7 +4,7 @@ import conf from '../config.json'
 
 export default function useCameraMovement(target, debugEnabled, engine) {
     const [isFocused, setIsFocused] = useState(false)
-    const camera = new Camera(0, 0, 0)
+
     let lastMousePosition = {x: 0, y: 0}
 
     const handleMouseDown = (event) => {

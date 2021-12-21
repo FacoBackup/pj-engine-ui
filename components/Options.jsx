@@ -43,11 +43,17 @@ export default function Options(props) {
                 <span className="material-icons-round">blur_on</span>
                 <ToolTip content={'Shading'} align={"middle"} justify={"start"}/>
             </Button>
+            <Button className={styles.button} styles={{color: props.visibleClipping ? '#0095ff' : 'white'}}
+                    onClick={() => props.setVisibleClipping(!props.visibleClipping)}>
+                <span className="material-icons-round" style={{fontSize: '1.2rem'}}>details</span>
+                <ToolTip content={'Visible clipping'} align={"middle"} justify={"start"}/>
+            </Button>
+
             <Button className={styles.button}
                     styles={{color: props.vertexVisible ? '#0095ff' : 'white'}}
                     onClick={() => props.setVertexVisible(!props.vertexVisible)}>
                 <span className="material-icons-round" style={{fontSize: '1.2rem'}}>grain</span>
-                <ToolTip content={'Show vertexes'} align={"middle"} justify={"start"}/>
+                <ToolTip content={'Show vertices'} align={"middle"} justify={"start"}/>
             </Button>
             <div className={styles.divider}/>
             <Button className={styles.button} disabled={true}
@@ -61,8 +67,9 @@ export default function Options(props) {
                 <ToolTip content={'Show time per frame'} align={"middle"} justify={"start"}/>
             </Button>
             <div className={styles.divider}/>
-            <Button className={styles.button} disabled={true}
-                    onClick={() => props.setVertexVisible(!props.vertexVisible)}>
+            <Button className={styles.button}
+                    disabled={true}
+                    onClick={() => null}>
                 <span className="material-icons-round" style={{fontSize: '1.2rem'}}>center_focus_weak</span>
                 <ToolTip content={'Center camera'} align={"middle"} justify={"start"}/>
             </Button>
@@ -71,13 +78,15 @@ export default function Options(props) {
 }
 
 Options.propTypes = {
-    wireframeMode: PropTypes.func,
+    visibleClipping: PropTypes.bool,
+    setVisibleClipping: PropTypes.func,
+    wireframeMode: PropTypes.bool,
     setWireframeMode: PropTypes.func,
-    vertexVisible: PropTypes.func,
+    vertexVisible: PropTypes.bool,
     setVertexVisible: PropTypes.func,
-    shading: PropTypes.func,
+    shading: PropTypes.bool,
     setShading: PropTypes.func,
-    texturing: PropTypes.func,
+    texturing: PropTypes.bool,
     setTexturing: PropTypes.func,
 
     fpsVisible: PropTypes.bool,

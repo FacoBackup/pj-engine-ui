@@ -7,9 +7,11 @@ export default function useOptions() {
     const [texturing, setTexturing] = useState(true)
     const [fpsVisible, setFpsVisible] = useState(true)
     const [tpfVisible, setTpfVisible] = useState(true)
+    const [visibleClipping, setVisibleClipping] = useState(false)
 
 
     return {
+        visibleClipping, setVisibleClipping,
         wireframeMode,
         setWireframeMode,
         texturing,

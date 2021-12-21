@@ -44,7 +44,7 @@ export default function Viewport(props) {
     useEffect(() => {
         if (engine && !executing) {
             // if (grid.triangles.length === 0) {
-            //     grid.computeVertexes()
+            //     grid.computeVertices()
             //     engine.meshes.push(new Mesh(grid.triangles))
             // }
 
@@ -55,7 +55,8 @@ export default function Viewport(props) {
                     profiler.wireframeMode,
                     profiler.texturing,
                     rotations,
-                    profiler.vertexVisible
+                    profiler.vertexVisible,
+                    profiler.visibleClipping
                 )
             else
                 engine.executeProd()
